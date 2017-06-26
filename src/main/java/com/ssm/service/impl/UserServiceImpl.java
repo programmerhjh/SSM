@@ -17,7 +17,16 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserMapper userMapper;
-    public User selectUserById(int id) {
-        return userMapper.selectUserById(id);
+
+    public User checkUserExist(String name, String password) {
+        return userMapper.checkUserExist(name, password);
+    }
+
+    public boolean registeredUser(User user) {
+        User newUser =  userMapper.registeredUser(user);
+        if(newUser != null)
+            return true;
+        else
+            return false;
     }
 }

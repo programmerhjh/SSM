@@ -1,6 +1,7 @@
 package com.ssm.dao;
 
 import com.ssm.model.User;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -8,5 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserMapper {
-    User selectUserById(int id);
+    User checkUserExist(@Param("name")String name,@Param("password")String password);
+    User registeredUser(User user);
 }
