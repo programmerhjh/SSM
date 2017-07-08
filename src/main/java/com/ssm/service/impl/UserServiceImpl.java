@@ -22,11 +22,15 @@ public class UserServiceImpl implements UserService {
         return userMapper.checkUserExist(name, password);
     }
 
-    public boolean registeredUser(User user) {
-        User newUser =  userMapper.registeredUser(user);
-        if(newUser != null)
-            return true;
-        else
-            return false;
+    public void registeredUser(String username,String password) {
+        userMapper.registeredUser(username,password);
+    }
+
+    public void addPassValidatePhone(String phone ,int id) {
+        userMapper.addPassValidatePhone(phone,id);
+    }
+
+    public int checkUsernameIsExist(String username) {
+        return userMapper.checkUsernameIsExist(username);
     }
 }

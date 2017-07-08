@@ -1,10 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page isELIgnored="false" %>
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js"><!--<![endif]-->
 	<head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -42,43 +42,35 @@
 
 	</head>
 	<body class="style-2">
-
-		<div class="container">
-
-
-			<div class="row">
-				<div class="col-md-4">
-
-
-					<!-- Start Sign In Form -->
-					<form action="loginning" class="fh5co-form animate-box" data-animate-effect="fadeInLeft" method="post">
-						<h2>Sign In</h2>
-						<div class="form-group">
-							<label for="username" class="sr-only">Username</label>
-							<input type="text" class="form-control" name="name" id="username" placeholder="Username" autocomplete="off">
-						</div>
-						<div class="form-group">
-							<label for="password" class="sr-only">Password</label>
-							<input type="password" class="form-control" name="password" id="password" placeholder="Password" autocomplete="off">
-						</div>
-						<div class="form-group">
-							<label for="remember"><input type="checkbox" id="remember"> Remember Me</label>
-						</div>
-						<div class="form-group">
-							<p>Not registered? <a href="registered">Sign Up</a> | <a href="forgot-password">Forgot Password?</a></p>
-						</div>
-						<div class="form-group">
-							<input type="submit" value="Sign In" class="btn btn-primary">
-						</div>
-					</form>
-					<!-- END Sign In Form -->
-
-				</div>
-			</div>
-
-		</div>
-	
-	<!-- jQuery -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                     <div class="fh5co-form animate-box" data-animate-effect="fadeInLeft">
+                    <!-- Start Sign In Form -->
+                        <h2>Sign In</h2>
+                        <div class="form-group">
+                            <label for="username" class="sr-only">Username</label>
+                            <input type="text" class="form-control" name="name" id="username" placeholder="Username" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="sr-only">Password</label>
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Password" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="remember"><input type="checkbox" id="remember"> Remember Me</label>
+                        </div>
+                        <div class="form-group">
+                            <p>Not registered? <a href="registered">Sign Up</a> | <a href="forgot-password">Forgot Password?</a></p>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Sign In" class="btn btn-primary" id="submit">
+                        </div>
+                    <!-- END Sign In Form -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- jQuery -->
 	<script src="../js/jquery.min.js"></script>
 	<!-- Bootstrap -->
 	<script src="../js/bootstrap.min.js"></script>
@@ -88,6 +80,37 @@
 	<script src="../js/jquery.waypoints.min.js"></script>
 	<!-- Main JS -->
 	<script src="../js/main.js"></script>
+
+	<script type="text/javascript">
+		$("#submit").click(function checkUser() {
+			var username = $("#username").val();
+			var password = $("#password").val();
+            var w=300; //模态窗口宽度
+            var h=300;//模态窗口高度
+            var iTop2 = (window.screen.availHeight - 20 - h) / 2;
+            var iLeft2 = (window.screen.availWidth - 10 - w) / 2;
+			var loginData = JSON.stringify({"name":username,"password":password});
+			$.ajax({
+				url:'loginning',
+				data:loginData,
+				contentType:'application/json;charset=utf-8',
+				type:'POST',
+                dataType:'json',
+				success:function (data) {
+				    if (data['OK'] == "OK"){
+                        if (data['MessageValidation'] == true){
+                            window.showModalDialog('checkPhone','newWindow',  'menubar:no;dialogHeight=' + h + 'px;dialogWidth=' + w + 'px;dialogLeft=' + iLeft2 + 'px;dialogTop=' + iTop2 + 'px;resizable=yes;scroll=1;resizeable=0;center=yes;location:no;status:no')
+                            window.location.href = "show-page";
+                        }else{
+                            window.location.href = "show-page";
+                        }
+                    }else{
+				        alert("用户名或密码错误，请重新输入");
+                    }
+                }
+			})
+        })
+	</script>
 
 	</body>
 </html>

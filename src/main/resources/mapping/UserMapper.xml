@@ -6,5 +6,16 @@
         SELECT * FROM user u WHERE u.name=#{name} AND u.password=#{password}
     </select>
 
+    <update id="addPassValidatePhone">
+        UPDATE user u SET u.phone=#{phone} WHERE u.id = #{id}
+    </update>
+
+    <select id="checkUsernameIsExist" parameterType="String" resultType="int">
+        SELECT count(id) FROM user WHERE name=#{username}
+    </select>
+
+    <insert id="registeredUser" >
+        INSERT INTO user(name,password) VALUES (#{name,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR})
+    </insert>
 
 </mapper>

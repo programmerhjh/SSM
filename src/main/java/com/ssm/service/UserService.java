@@ -7,5 +7,7 @@ import com.ssm.model.User;
  */
 public interface UserService {
     User checkUserExist(String name,String password);
-    boolean registeredUser(User user);
+    void registeredUser(String username,String password);
+    void addPassValidatePhone(String phone,int id);
+    int checkUsernameIsExist(String username);
 }

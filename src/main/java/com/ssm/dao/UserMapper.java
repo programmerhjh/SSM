@@ -10,5 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserMapper {
     User checkUserExist(@Param("name")String name,@Param("password")String password);
-    User registeredUser(User user);
+    void registeredUser(@Param("name")String username,@Param("password")String password);
+    int checkUsernameIsExist(String username);
+    void addPassValidatePhone(@Param("phone")String phone,@Param("id")int id);    //添加验证通过的手机号码
 }

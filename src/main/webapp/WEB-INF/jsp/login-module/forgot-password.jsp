@@ -49,7 +49,7 @@
 			<div class="row">
 				<div class="col-md-4">
 					<!-- Start Sign In Form -->
-					<form action="#" class="fh5co-form animate-box" data-animate-effect="fadeInLeft">
+					<div class="fh5co-form animate-box" data-animate-effect="fadeInLeft">
 						<h2>Forgot Password</h2>
 						<div class="form-group">
 							<div class="alert alert-success" role="alert">Your email has been sent.</div>
@@ -64,14 +64,9 @@
 						<div class="form-group">
 							<input type="submit" value="Send Email" class="btn btn-primary">
 						</div>
-					</form>
+					</div>
 					<!-- END Sign In Form -->
-
-
 				</div>
-			</div>
-			<div class="row" style="padding-top: 60px; clear: both;">
-				<div class="col-md-12 text-center"><p><small>&copy; All Rights Reserved. More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></small></p></div>
 			</div>
 		</div>
 	
