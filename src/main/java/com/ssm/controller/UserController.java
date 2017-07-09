@@ -1,10 +1,14 @@
 package com.ssm.controller;
 
+import Validator.UserValidator;
 import com.ssm.model.User;
 import com.ssm.service.UserService;
 import implement.IndustrySMS;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,9 +31,13 @@ public class UserController{
 
     private Logger log = Logger.getLogger(UserController.class);
     private EncoderByMD5 encoderByMD5 = new EncoderByMD5();
-
     @Resource
     private UserService userService;
+
+    @InitBinder
+    public void initBinder(DataBinder binder) {
+        binder.setValidator(new UserValidator());
+    }
 
     @RequestMapping("/login-page")
     public String showLoginPage(){
@@ -49,13 +57,17 @@ public class UserController{
         return "login-module/show-page";
     }
 
+
     @RequestMapping("/loginning")
-    public @ResponseBody Map<String, Object> userLoginCheck(HttpSession session, @RequestBody String loginData) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public @ResponseBody Map<String, Object> userLoginCheck(HttpSession session, @RequestBody String loginData, BindingResult bindingResult) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         log.info("登录验证");
         Map<String, Object> userFormation = JsonToMap.toHashMap(loginData);
         try {
-            System.out.println(loginData);
             User isExistUser = userService.checkUserExist((String) userFormation.get("name"), encoderByMD5.encrypt( userFormation.get("password").toString()));
+            if(!UserValidator.loginParam(isExistUser,bindingResult)){
+                userFormation.put("paramError",1);
+                return userFormation;
+            }
             if (isExistUser != null) {
                 userFormation.put("OK","OK");
                 if (isExistUser.getPhone() == null) {

@@ -1,16 +1,24 @@
 package com.ssm.model;
 
+import Validator.ValidatorGroup1;
+
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
  * Created by acer on 2017/6/24.
  */
 public class User {
+    @NotNull(groups = {ValidatorGroup1.class})
     private int id;
+    @NotNull(groups = {ValidatorGroup1.class})
     private String name;
+    @NotNull(groups = {ValidatorGroup1.class})
+    private String password;
+
+
     private String phone;
     private String email;
-    private String password;
     private Date birth;
     private String description;
     private Integer age;

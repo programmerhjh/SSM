@@ -104,7 +104,11 @@
                         }else{
                             window.location.href = "show-page";
                         }
-                    }else{
+                    }else if(data['paramError'] == 1){
+				        window.location.href = "redirect:error.jsp";
+                    }else if(data['loginError']){
+                        alert("登陆异常..请稍后再试 : " + data['loginError']);
+                    }else {
 				        alert("用户名或密码错误，请重新输入");
                     }
                 }
