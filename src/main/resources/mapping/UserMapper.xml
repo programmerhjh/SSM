@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ssm.dao.UserMapper">
+<mapper namespace="com.ssm.mapper.UserMapper">
 
+    <resultMap id="userResultMap" type="com.ssm.model.User">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="birth" column="birth"/>
+        <result property="description" column="description"/>
+        <result property="age" column="age"/>
+        <result property="address" column="address"/>
+    </resultMap>
+
+    
     <select id="checkUserExist" resultType="com.ssm.model.User">
         SELECT * FROM user u WHERE u.name=#{name} AND u.password=#{password}
     </select>
@@ -14,8 +27,40 @@
         SELECT count(id) FROM user WHERE name=#{username}
     </select>
 
-    <insert id="registeredUser" >
+    <update id="updateUserHasCompleteFormation" parameterType="com.ssm.model.User">
+        UPDATE user u SET
+        u.name=#{user.name},u.phone=#{user.phone},u.email=#{user.email},u.password=#{user.password},u.birth=#{user.birth},
+        u.description=#{user.description},u.age=#{user.age},u.address=#{user.address} WHERE u.id=#{user.id}
+    </update>
+
+    <!-- 更新用户在userbehavior表中的的行为信息 -->
+    <update id="updateUserBehavior" parameterType="com.ssm.model.User">
+        UPDATE userbehavior SET userHasCompleteFormation=1 WHERE userId=#{user.id}
+    </update>
+
+    <!-- 检查用户是否完善资料 -->
+    <select id="checkUserHasCompleteFormation" parameterType="com.ssm.model.User" resultType="int">
+        SELECT userHasCompleteFormation FROM userbehavior u WHERE u.userId=#{user.id}
+    </select>
+
+    <insert id="registeredUser">
         INSERT INTO user(name,password) VALUES (#{name,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR})
     </insert>
+
+    <select id="findUserByName" parameterType="java.lang.String" resultType="com.ssm.model.User">
+        SELECT * FROM user WHERE name=#{name}
+    </select>
+
+    <insert id="registerUserBehavior" parameterType="com.ssm.model.User">
+        INSERT INTO userbehavior(userId) VALUE (#{user.id})
+    </insert>
+
+    <select id="checkUserExistByPhone" resultType="int">
+        SELECT count(id) FROM user u WHERE u.name=#{name} AND u.phone=#{phone}
+    </select>
+
+    <update id="addNewPassword">
+        UPDATE user u SET u.password=#{password} WHERE u.name=#{name}
+    </update>
 
 </mapper>

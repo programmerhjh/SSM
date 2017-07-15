@@ -47,7 +47,6 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-4">
-
 					<!-- Start Sign In Form -->
 					<div class="fh5co-form animate-box" data-animate-effect="fadeInLeft">
 						<h2>Sign Up</h2>

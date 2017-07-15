@@ -1,6 +1,6 @@
 package com.ssm.service.impl;
 
-import com.ssm.dao.UserMapper;
+import com.ssm.mapper.UserMapper;
 import com.ssm.model.User;
 import com.ssm.service.UserService;
 import org.springframework.stereotype.Service;
@@ -22,8 +22,10 @@ public class UserServiceImpl implements UserService {
         return userMapper.checkUserExist(name, password);
     }
 
-    public void registeredUser(String username,String password) {
+    public void registeredUser(String username, String password) {
         userMapper.registeredUser(username,password);
+        User user = userMapper.findUserByName(username);
+        userMapper.registerUserBehavior(user);
     }
 
     public void addPassValidatePhone(String phone ,int id) {
@@ -32,5 +34,22 @@ public class UserServiceImpl implements UserService {
 
     public int checkUsernameIsExist(String username) {
         return userMapper.checkUsernameIsExist(username);
+    }
+
+    public int checkUserHasCompleteFormation(User user) {
+        return userMapper.checkUserHasCompleteFormation(user);
+    }
+
+    public void updateUserHasCompleteFormation(User user){
+        userMapper.updateUserHasCompleteFormation(user);
+        userMapper.updateUserBehavior(user);
+    }
+
+    public int checkUserExistByPhone(String name, String phone) {
+        return userMapper.checkUserExistByPhone(name,phone);
+    }
+
+    public void addNewPassword(String name, String password) {
+        userMapper.addNewPassword(name,password);
     }
 }

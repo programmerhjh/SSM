@@ -1,24 +1,32 @@
 package com.ssm.controller;
 
 import Validator.UserValidator;
+import com.ssm.model.UserBehavior;
+import com.ssm.model.UserQueryVo;
 import com.ssm.model.User;
 import com.ssm.service.UserService;
 import implement.IndustrySMS;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import tool.EncoderByMD5;
 import tool.JsonToMap;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Map;
 
 
@@ -34,9 +42,38 @@ public class UserController{
     @Resource
     private UserService userService;
 
-    @InitBinder
-    public void initBinder(DataBinder binder) {
-        binder.setValidator(new UserValidator());
+    @RequestMapping("loginOut")
+    public String loginOut(HttpSession session){
+        session.removeAttribute("user");
+        return "login-module/login-page";
+    }
+
+    @RequestMapping("addUserData")
+    public String addUserData(@Valid User user, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            List<ObjectError> allError = bindingResult.getAllErrors();
+            for (ObjectError objectError : allError){
+                System.out.println(objectError.getDefaultMessage());
+            }
+            return "error";
+        }
+        userService.updateUserHasCompleteFormation(user);
+        log.info("添加个人信息成功");
+        return "login-module/show-page";
+    }
+    /**
+     * 完善个人资料页面
+     * @return
+     */
+    @RequestMapping("/organizing_data")
+    public String organizingDataPage(Model model,HttpSession session){
+        if(session.getAttribute("user") != null){
+            User user = (User) session.getAttribute("user");
+            model.addAttribute("user",user);
+            return "login-module/organizing_data";
+        }
+        log.info("用户未登录");
+        return "login-module/login-page";
     }
 
     @RequestMapping("/login-page")
@@ -57,27 +94,24 @@ public class UserController{
         return "login-module/show-page";
     }
 
-
     @RequestMapping("/loginning")
-    public @ResponseBody Map<String, Object> userLoginCheck(HttpSession session, @RequestBody String loginData, BindingResult bindingResult) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public @ResponseBody Map<String, Object> userLoginCheck(HttpSession session, @RequestBody String loginData) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         log.info("登录验证");
         Map<String, Object> userFormation = JsonToMap.toHashMap(loginData);
         try {
             User isExistUser = userService.checkUserExist((String) userFormation.get("name"), encoderByMD5.encrypt( userFormation.get("password").toString()));
-            if(!UserValidator.loginParam(isExistUser,bindingResult)){
-                userFormation.put("paramError",1);
-                return userFormation;
-            }
             if (isExistUser != null) {
                 userFormation.put("OK","OK");
                 if (isExistUser.getPhone() == null) {
                     log.info("短信验证");
                     session.setAttribute("user", isExistUser);
+                    session.setAttribute("isLogin",true);
                     userFormation.put("MessageValidation",true);
                     return userFormation;
                 }
                 log.info("登陆成功");
                 session.setAttribute("user", isExistUser);
+                session.setAttribute("isLogin",true);
                 return userFormation;
             }
         } catch (Exception e) {
@@ -111,7 +145,6 @@ public class UserController{
     @RequestMapping("/addPhone")
     public @ResponseBody String addPhone(HttpSession session) {
         log.info("添加用户电话号码");
-        System.out.println(IndustrySMS.getTo() + session.getAttribute("user"));
         if (!(IndustrySMS.getTo() == null || IndustrySMS.getTo() == "" || session.getAttribute("user") == null)){
             log.info("用户已登录");
             userService.addPassValidatePhone(IndustrySMS.getTo(),((User)session.getAttribute("user")).getId());
@@ -136,6 +169,59 @@ public class UserController{
         }else{
             return "false";
         }
+    }
+
+    /**
+     * 检查用户是否完善资料
+     * @param session
+     * @return
+     */
+    @RequestMapping("hasCompleteUserFormation")
+    public @ResponseBody String hasCompleteUserFormation(HttpSession session){
+        User user;
+        if(session.getAttribute("user") != null){
+            user = (User) session.getAttribute("user");
+            int i = userService.checkUserHasCompleteFormation(user);
+            if(i == 1){
+                return "yes";
+            }else if(i == 0){
+                return "no";
+            }
+        }
+        return "noLogin";
+    }
+
+    @RequestMapping("addNewPassword")
+    public @ResponseBody String addNewPassword(@RequestBody String data) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        log.info("添加用户新密码");
+        if(data != null){
+            Map<String,Object> temp = JsonToMap.toHashMap(data);
+            String name = temp.get("name").toString();
+            String password = encoderByMD5.encrypt(temp.get("password").toString());
+            userService.addNewPassword(name,password);
+            return "success";
+        }
+        log.info("系统错误，data为空");
+        return "error";
+    }
+
+    @RequestMapping("checkUserIsExist")
+    public @ResponseBody String checkUserIsExist(@RequestBody String data){
+        log.info("检查用户是否存在");
+        System.out.println(data);
+        if(data != null){
+            Map<String,Object> temp = JsonToMap.toHashMap(data);
+            String username = temp.get("name").toString();
+            String phone = temp.get("phone").toString();
+            if(userService.checkUserExistByPhone(username,phone) == 1){
+                return "exist";
+            }else {
+                log.info("用户不存在");
+                return "no";
+            }
+        }
+        log.info("系统错误..获取不到data值");
+        return "false";
     }
 
     @RequestMapping("registerUser")

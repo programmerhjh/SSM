@@ -1,14 +1,20 @@
 package com.ssm.model;
 
 import Validator.ValidatorGroup1;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 /**
  * Created by acer on 2017/6/24.
  */
 public class User {
+
+    @Id
     @NotNull(groups = {ValidatorGroup1.class})
     private int id;
     @NotNull(groups = {ValidatorGroup1.class})
@@ -19,19 +25,12 @@ public class User {
 
     private String phone;
     private String email;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Past
     private Date birth;
     private String description;
     private Integer age;
     private String address;
-    private String validateNumber;
-
-    public String getValidateNumber() {
-        return validateNumber;
-    }
-
-    public void setValidateNumber(String validateNumber) {
-        this.validateNumber = validateNumber;
-    }
 
     public String getPhone() {
         return phone;
@@ -105,4 +104,18 @@ public class User {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", birth=" + birth +
+                ", description='" + description + '\'' +
+                ", age=" + age +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }

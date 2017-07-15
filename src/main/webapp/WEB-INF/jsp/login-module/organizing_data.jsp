@@ -1,5 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page isELIgnored="false" %>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -8,7 +12,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>完善资料</title>
+    <title>完善个人资料</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Free HTML5 Template by FreeHTML5.co" />
     <meta name="keywords" content="free html5, free template, free bootstrap, html5, css3, mobile first, responsive" />
@@ -45,33 +49,34 @@
 
 <div class="container">
 
-
     <div class="row">
         <div class="col-md-4">
-
-
             <!-- Start Sign In Form -->
-            <form action="" class="fh5co-form animate-box" data-animate-effect="fadeInLeft" method="post">
-                <h2>短信身份验证</h2>
+            <form action="addUserData" class="fh5co-form animate-box" data-animate-effect="fadeInLeft" method="post">
                 <div class="form-group">
-                    <label for="phone" class="sr-only">Phone</label>
-                    <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone" autocomplete="off">
-                    <br>
-                    <input type="submit" value="发送验证码" class="btn btn-primary">
-                </div>
-                <div class="form-group">
-                    <label for="validateNumber" class="sr-only">验证码</label>
-                    <input type="text" class="form-control" name="validateNumber" id="validateNumber" placeholder="ValidateNumber" autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="提交" class="btn btn-primary">
+                    <input type="hidden" name="id" value="${user.id}">
+                    <input type="hidden" name="password" value="${user.password}">
+                    <h4>用户名</h4><input type="text" name="name" value="${user.name}" id="name" disabled="true">
+                    <c:choose>
+                        <c:when test="${user.phone == null}" >
+                            <h4>手机号码</h4><input type="text" class="form-control" name="phone" id="phone" placeholder="Phone" autocomplete="off"><br><button type="button" id="send">发送手机验证码</button><br>
+                            <h4>验证码</h4><input type="text" class="form-control" name="validateNumber" id="ValidateNumber" placeholder="ValidateNumber" autocomplete="off">
+                        </c:when>
+                        <c:otherwise>
+                            <h4>手机号码</h4><input type="text" class="form-control" name="phone" value="${user.phone}" id="phone1" placeholder="Phone" autocomplete="off" disabled="true"><br>
+                        </c:otherwise>
+                    </c:choose>
+                    <h4>年龄</h4><input type="text" class="form-control" name="age" placeholder="Age" value="${user.age}">
+                    <h4>生日</h4><input type="text" class="form-control" name="birth" placeholder="xxxx-xx-xx" value="${user.birth}" id="Birth" >
+                    <h4>Email</h4><input type="email" value="${user.email}" class="form-control" name="email" placeholder="Email" id="Email">
+                    <h4>地址</h4><input type="text" class="form-control" value="${user.address}" name="address" placeholder="Address">
+                    <h4>自我描述</h4><textarea class="form-control" name="description" value="${user.description}" placeholder="Description"></textarea><br>
+                    <button type="submit" id="submit">提交</button>
                 </div>
             </form>
             <!-- END Sign In Form -->
-
         </div>
     </div>
-
 </div>
 
 <!-- jQuery -->
@@ -84,6 +89,124 @@
 <script src="../js/jquery.waypoints.min.js"></script>
 <!-- Main JS -->
 <script src="../js/main.js"></script>
+
+<script type="text/javascript">
+    var flag1= true,flag2= true,flag3 = true;
+
+    var validateNumber;
+    $("#send").click(function checkPhone(){
+        var phone = $("#phone").val();
+        if(!(/^1[34578]\d{9}$/.test(phone))){
+            alert("手机号码有误，请重填");
+        }else{
+            $.ajax({
+                url:'validatePhone',
+                data:phone,
+                contentType:'text/xml;charset=utf-8',
+                type:'POST',
+                dataType:'text',
+                success:function (data) {
+                    if(data){
+                        validateNumber = data;
+                        document.getElementById("send").setAttribute("disabled",true);
+                    }else{
+                        alert("请求错误，请重新点击发送");
+                        document.getElementById("send").removeAttribute("disabled");
+                    }
+                }
+            })
+        }
+    })
+
+
+    $("#Birth").change(function checkBirth() {
+        var birth = $("#Birth").val();
+        var temp = "生日";
+        if(birth == "" || birth == null){
+            var tipNode = document.getElementById("Birth");
+            if (tipNode.nextElementSibling.tagName == "LI") {
+                tipNode.parentNode.removeChild(tipNode.nextElementSibling);
+            }
+            flag1 = true;
+        }else if(!(/^((?!0000)[0-9]{4}-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)$/.test(birth))){
+            addTip(temp,"Birth","false");
+            flag1 = false;
+        }else{
+            addTip(temp,"Birth","true");
+            flag1 = true;
+        }
+    })
+
+    $("#Email").change(function checkEmail() {
+        var email = $("#Email").val();
+        var temp = "邮箱地址";
+        if(email == ""){
+            var tipNode = document.getElementById("Email");
+            if (tipNode.nextElementSibling.tagName == "LI") {
+                tipNode.parentNode.removeChild(tipNode.nextElementSibling);
+            }
+            flag2 = true;
+        }else if(!(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(email))){
+            addTip(temp,"Email","false");
+            flag2 = false;
+        }else{
+            addTip(temp,"Email","true");
+            flag2 = true;
+        }
+    })
+
+    $("#ValidateNumber").change(function checkPhoneValidate() {
+        var userValidateNumber = document.getElementById('ValidateNumber').value;
+        var temp = "验证码";
+        if (userValidateNumber == validateNumber){
+            addTip(temp,"ValidateNumber","true");
+            flag3 = false;
+        }else{
+            addTip(temp,"ValidateNumber","false");
+            flag3 = true;
+        }
+    })
+
+    function insertAfter( newElement, targetElement ){
+        var parent = targetElement.parentNode;
+        if( parent.lastChild == targetElement ){
+            parent.appendChild(newElement);
+        }else{
+            parent.insertBefore( newElement, targetElement.nextSibling );
+        }
+    }
+
+    function addTip(text,id,flag) {
+        var tipNode = document.getElementById(id);
+        if (tipNode.nextElementSibling.tagName == "LI") {
+            tipNode.parentNode.removeChild(tipNode.nextElementSibling);
+        }
+        var liNode = document.createElement("li");
+        if (flag == "true"){
+            text += "正确";
+            var tip = document.createTextNode(text);
+            liNode.style.color="#4cae4c";
+        }else {
+            text += "不正确";
+            var tip = document.createTextNode(text);
+            liNode.style.color = "#ac2925";
+        }
+
+        liNode.appendChild(tip);
+        insertAfter(liNode ,document.getElementById(id));
+    }
+
+    $("#submit").click(function submitData() {
+        if(flag1 && flag2 && flag3){
+            document.getElementById("name").removeAttribute("disabled");
+            document.getElementById("phone1").removeAttribute("disabled");
+            return true;
+        }else{
+            alert("表单信息有误");
+            return false;
+        }
+    })
+</script>
 
 </body>
 </html>
