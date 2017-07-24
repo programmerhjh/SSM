@@ -3,6 +3,7 @@
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -32,7 +33,7 @@
 
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
-
+    <link rel='stylesheet' id='main-css-css'  href='../css/main5152.css?ver=1.0' type='text/css' media='all' />
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/animate.css">
     <link rel="stylesheet" href="../css/style.css">
@@ -53,6 +54,13 @@
         <div class="col-md-4">
             <!-- Start Sign In Form -->
             <form action="addUserData" class="fh5co-form animate-box" data-animate-effect="fadeInLeft" method="post">
+                <input type="hidden" name="headAddress" id="headAddress" value="${user.headAddress}">
+            <img src="${user.headAddress}" id="imgUser" class="flickr-photos" height="100" width="100">
+
+                <div class="form-group">
+                    <br>
+                    <input type="file" name="fileTrans" id="uploadFile" />
+                </div>
                 <div class="form-group">
                     <input type="hidden" name="id" value="${user.id}">
                     <input type="hidden" name="password" value="${user.password}">
@@ -67,7 +75,7 @@
                         </c:otherwise>
                     </c:choose>
                     <h4>年龄</h4><input type="text" class="form-control" name="age" placeholder="Age" value="${user.age}">
-                    <h4>生日</h4><input type="text" class="form-control" name="birth" placeholder="xxxx-xx-xx" value="${user.birth}" id="Birth" >
+                    <h4>生日</h4><input type="text" class="form-control" name="birth" placeholder="xxxx-xx-xx" value="<fmt:formatDate value="${user.birth}" pattern="yyyy-MM-dd"/>" id="Birth" >
                     <h4>Email</h4><input type="email" value="${user.email}" class="form-control" name="email" placeholder="Email" id="Email">
                     <h4>地址</h4><input type="text" class="form-control" value="${user.address}" name="address" placeholder="Address">
                     <h4>自我描述</h4><textarea class="form-control" name="description" value="${user.description}" placeholder="Description"></textarea><br>
@@ -78,7 +86,7 @@
         </div>
     </div>
 </div>
-
+</body>
 <!-- jQuery -->
 <script src="../js/jquery.min.js"></script>
 <!-- Bootstrap -->
@@ -118,6 +126,33 @@
         }
     })
 
+    $("#uploadFile").change(function () {
+        var s = new FormData();
+        var files = $('input[name="fileTrans"]').prop('files');//获取到文件列表
+        if(files.length == 0){
+            alert('请选择文件');
+            return;
+        }else if(files.length > 1){
+            alert("请选择1张图片")
+            return;
+        }else{
+            s.append("img", files[0]);
+        }
+        $.ajax({
+            url:'upload',
+            type:'POST',
+            data:s,
+            processData:false,
+            contentType:false,
+            success:function (data) {
+                if(data){
+                    document.getElementById("imgUser").src = data;
+                    document.getElementById("headAddress").value = data;
+                }
+            }
+
+        })
+    })
 
     $("#Birth").change(function checkBirth() {
         var birth = $("#Birth").val();
@@ -207,6 +242,4 @@
         }
     })
 </script>
-
-</body>
 </html>

@@ -1,33 +1,37 @@
 package com.ssm.controller;
 
-import Validator.UserValidator;
-import com.ssm.model.UserBehavior;
-import com.ssm.model.UserQueryVo;
+import com.alibaba.fastjson.JSONObject;
 import com.ssm.model.User;
+import com.ssm.model.UserExpand;
 import com.ssm.service.UserService;
 import implement.IndustrySMS;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import tool.EncoderByMD5;
 import tool.JsonToMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 /**
@@ -49,7 +53,7 @@ public class UserController{
     }
 
     @RequestMapping("addUserData")
-    public String addUserData(@Valid User user, BindingResult bindingResult){
+    public String addUserData(@Valid UserExpand user, BindingResult bindingResult,HttpSession session){
         if(bindingResult.hasErrors()){
             List<ObjectError> allError = bindingResult.getAllErrors();
             for (ObjectError objectError : allError){
@@ -58,8 +62,9 @@ public class UserController{
             return "error";
         }
         userService.updateUserHasCompleteFormation(user);
+        session.setAttribute("user",user);
         log.info("添加个人信息成功");
-        return "login-module/show-page";
+        return "bbs-module/index";
     }
     /**
      * 完善个人资料页面
@@ -68,12 +73,40 @@ public class UserController{
     @RequestMapping("/organizing_data")
     public String organizingDataPage(Model model,HttpSession session){
         if(session.getAttribute("user") != null){
-            User user = (User) session.getAttribute("user");
+            UserExpand user = (UserExpand) session.getAttribute("user");
+            System.out.println(user);
             model.addAttribute("user",user);
             return "login-module/organizing_data";
         }
         log.info("用户未登录");
         return "login-module/login-page";
+    }
+
+    @RequestMapping("upload")
+    public void upload(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String resultParam = "";
+        //构建返回的json串
+        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver(request.getServletContext());
+        //判断是否是文件
+        if(commonsMultipartResolver.isMultipart(request)){
+            MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+            Iterator<String> iterator = multipartHttpServletRequest.getFileNames();
+            while(iterator.hasNext()){
+                MultipartFile file = multipartHttpServletRequest.getFile(iterator.next());
+                String newFileSuffix = "." + file.getContentType().substring(file.getContentType().indexOf("/") + 1);
+                String fileName = UUID.randomUUID() + new SimpleDateFormat("yyyy-MM-dd", Locale.CHINESE).format(new Date()).toString() + file.getOriginalFilename().hashCode();// 文件名称
+                String localPath = "F:/upload/"+ fileName + newFileSuffix;
+                File newFile = new File(localPath);
+                file.transferTo(newFile);
+                resultParam = "http://localhost:8080/img/" + fileName + newFileSuffix;
+            }
+        }
+        response.setContentType("text/html;charset=utf-8");
+        System.out.println(resultParam);
+        PrintWriter out = response.getWriter();
+        out.print(resultParam);  //返回url地址
+        out.flush();
+        out.close();
     }
 
     @RequestMapping("/login-page")
@@ -88,18 +121,12 @@ public class UserController{
         return "login-module/checkPhone";
     }
 
-    @RequestMapping("/show-page")
-    public String showPage(){
-        log.info("主页");
-        return "login-module/show-page";
-    }
-
     @RequestMapping("/loginning")
     public @ResponseBody Map<String, Object> userLoginCheck(HttpSession session, @RequestBody String loginData) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         log.info("登录验证");
         Map<String, Object> userFormation = JsonToMap.toHashMap(loginData);
         try {
-            User isExistUser = userService.checkUserExist((String) userFormation.get("name"), encoderByMD5.encrypt( userFormation.get("password").toString()));
+            UserExpand isExistUser = userService.checkUserExist((String) userFormation.get("name"), encoderByMD5.encrypt( userFormation.get("password").toString()));
             if (isExistUser != null) {
                 userFormation.put("OK","OK");
                 if (isExistUser.getPhone() == null) {

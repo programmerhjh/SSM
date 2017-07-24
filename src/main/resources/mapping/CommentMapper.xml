@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.CommentMapper">
+
+  <!-- 每条评论只能对应一个用户,每条评论只能对应一篇帖子 -->
+  <resultMap extends="ResultMapWithBLOBs" id="CommentCustomMap" type="com.ssm.model.CommentCustom">
+    <association property="user" javaType="com.ssm.model.User">
+      <id property="id" column="id"/>
+      <result property="name" column="name"/>
+      <result property="phone" column="phone"/>
+      <result property="email" column="email"/>
+      <result property="password" column="password"/>
+      <result property="birth" column="birth"/>
+      <result property="description" column="description"/>
+      <result property="age" column="age"/>
+      <result property="address" column="address"/>
+    </association>
+    <association property="post" javaType="com.ssm.model.Post">
+      <id column="post_id" jdbcType="INTEGER" property="postId" />
+      <result column="post_name" jdbcType="VARCHAR" property="postName" />
+      <result column="post_createtime" jdbcType="DATE" property="postCreatetime" />
+      <result column="post_author" jdbcType="INTEGER" property="postAuthor" />
+      <result column="post_clicktimes" jdbcType="INTEGER" property="postClicktimes" />
+      <result column="post_category" jdbcType="VARCHAR" property="postCategory" />
+      <result column="post_post" jdbcType="LONGVARCHAR" property="postPost" />
+    </association>
+  </resultMap>
+  
+
+  <resultMap id="CommentAndReplyVo" extends="ResultMapWithBLOBs" type="com.ssm.vo.CommentAndReplyVo">
+    <association property="commentUserVo" javaType="com.ssm.model.UserExpand">
+      <id property="id" column="id" jdbcType="INTEGER"/>
+      <result property="name" column="name" jdbcType="VARCHAR"/>
+      <result property="headAddress" column="headAddress" jdbcType="VARCHAR"/>
+    </association>
+  </resultMap>
+
+  <resultMap id="BaseResultMap" type="com.ssm.model.Comment">
+    <id column="comment_id" jdbcType="INTEGER" property="commentId" />
+    <result column="comment_user" jdbcType="INTEGER" property="commentUser" />
+    <result column="comment_createtime" jdbcType="DATE" property="commentCreatetime" />
+    <result column="comment_post" jdbcType="INTEGER" property="commentPost" />
+  </resultMap>
+
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.ssm.model.Comment">
+    <result column="comment_comment" jdbcType="LONGVARCHAR" property="commentComment" />
+  </resultMap>
+
+  <sql id="Comment_Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Comment_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+
+  <sql id="Comment_Base_Column_List">
+    comment_id, comment_user, comment_createtime, comment_post
+  </sql>
+
+  <sql id="Comment_Blob_Column_List">
+    comment_comment
+  </sql>
+
+  <select id="selectByCommentExampleWithBLOBs" parameterType="com.ssm.model.CommentExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Comment_Base_Column_List" />
+    ,
+    <include refid="Comment_Blob_Column_List" />
+    from comment
+    <if test="_parameter != null">
+      <include refid="Comment_Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByCommentExample" parameterType="com.ssm.model.CommentExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Comment_Base_Column_List" />
+    from comment
+    <if test="_parameter != null">
+      <include refid="Comment_Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <select id="selectPostComment" parameterType="java.lang.Integer" resultMap="CommentAndReplyVo">
+    SELECT u.id,u.name,u.headaddress,c.comment_id,c.comment_user,c.comment_createtime,c.comment_post,c.comment_comment from user u,post p,comment c where #{postId}=c.comment_post and u.id=c.comment_user
+  </select>
+
+
+  <select id="selectByCommentPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Comment_Base_Column_List" />
+    ,
+    <include refid="Comment_Blob_Column_List" />
+    from comment
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByCommentPrimaryKey" parameterType="java.lang.Integer">
+    delete from comment
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByCommentExample" parameterType="com.ssm.model.CommentExample">
+    delete from comment
+    <if test="_parameter != null">
+      <include refid="Comment_Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insertComment" parameterType="com.ssm.model.Comment">
+    insert into comment (comment_id, comment_user, comment_createtime, 
+      comment_post, comment_comment)
+    values (#{commentId,jdbcType=INTEGER}, #{commentUser,jdbcType=INTEGER}, #{commentCreatetime,jdbcType=DATE}, 
+      #{commentPost,jdbcType=INTEGER}, #{commentComment,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertCommentSelective" parameterType="com.ssm.model.Comment">
+    insert into comment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="commentId != null">
+        comment_id,
+      </if>
+      <if test="commentUser != null">
+        comment_user,
+      </if>
+      <if test="commentCreatetime != null">
+        comment_createtime,
+      </if>
+      <if test="commentPost != null">
+        comment_post,
+      </if>
+      <if test="commentComment != null">
+        comment_comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="commentId != null">
+        #{commentId,jdbcType=INTEGER},
+      </if>
+      <if test="commentUser != null">
+        #{commentUser,jdbcType=INTEGER},
+      </if>
+      <if test="commentCreatetime != null">
+        #{commentCreatetime,jdbcType=DATE},
+      </if>
+      <if test="commentPost != null">
+        #{commentPost,jdbcType=INTEGER},
+      </if>
+      <if test="commentComment != null">
+        #{commentComment,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCommentExample" parameterType="com.ssm.model.CommentExample" resultType="java.lang.Integer">
+    select count(*) from comment
+    <if test="_parameter != null">
+      <include refid="Comment_Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByCommentExampleSelective" parameterType="map">
+    update comment
+    <set>
+      <if test="record.commentId != null">
+        comment_id = #{record.commentId,jdbcType=INTEGER},
+      </if>
+      <if test="record.commentUser != null">
+        comment_user = #{record.commentUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.commentCreatetime != null">
+        comment_createtime = #{record.commentCreatetime,jdbcType=DATE},
+      </if>
+      <if test="record.commentPost != null">
+        comment_post = #{record.commentPost,jdbcType=INTEGER},
+      </if>
+      <if test="record.commentComment != null">
+        comment_comment = #{record.commentComment,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Comment_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCommentExampleWithBLOBs" parameterType="map">
+    update comment
+    set comment_id = #{record.commentId,jdbcType=INTEGER},
+      comment_user = #{record.commentUser,jdbcType=INTEGER},
+      comment_createtime = #{record.commentCreatetime,jdbcType=DATE},
+      comment_post = #{record.commentPost,jdbcType=INTEGER},
+      comment_comment = #{record.commentComment,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Comment_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCommentExample" parameterType="map">
+    update comment
+    set comment_id = #{record.commentId,jdbcType=INTEGER},
+      comment_user = #{record.commentUser,jdbcType=INTEGER},
+      comment_createtime = #{record.commentCreatetime,jdbcType=DATE},
+      comment_post = #{record.commentPost,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Comment_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCommentPrimaryKeySelective" parameterType="com.ssm.model.Comment">
+    update comment
+    <set>
+      <if test="commentUser != null">
+        comment_user = #{commentUser,jdbcType=INTEGER},
+      </if>
+      <if test="commentCreatetime != null">
+        comment_createtime = #{commentCreatetime,jdbcType=DATE},
+      </if>
+      <if test="commentPost != null">
+        comment_post = #{commentPost,jdbcType=INTEGER},
+      </if>
+      <if test="commentComment != null">
+        comment_comment = #{commentComment,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByCommentPrimaryKeyWithBLOBs" parameterType="com.ssm.model.Comment">
+    update comment
+    set comment_user = #{commentUser,jdbcType=INTEGER},
+      comment_createtime = #{commentCreatetime,jdbcType=DATE},
+      comment_post = #{commentPost,jdbcType=INTEGER},
+      comment_comment = #{commentComment,jdbcType=LONGVARCHAR}
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByCommentPrimaryKey" parameterType="com.ssm.model.Comment">
+    update comment
+    set comment_user = #{commentUser,jdbcType=INTEGER},
+      comment_createtime = #{commentCreatetime,jdbcType=DATE},
+      comment_post = #{commentPost,jdbcType=INTEGER}
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -26,7 +26,6 @@ public class JsonToMap {
             System.out.println(mapKey);
             data.put(mapKey, mapValue);
         }
-        System.out.println(data.get("name"));
         return data;
     }
 }

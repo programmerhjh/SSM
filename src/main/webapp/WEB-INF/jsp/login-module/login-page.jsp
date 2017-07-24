@@ -100,9 +100,9 @@
 				    if (data['OK'] == "OK"){
                         if (data['MessageValidation'] == true){
                             window.showModalDialog('checkPhone','newWindow',  'menubar:no;dialogHeight=' + h + 'px;dialogWidth=' + w + 'px;dialogLeft=' + iLeft2 + 'px;dialogTop=' + iTop2 + 'px;resizable=yes;scroll=1;resizeable=0;center=yes;location:no;status:no')
-                            window.location.href = "show-page";
+                            window.location.href = "../bbs-module/index";
                         }else{
-                            window.location.href = "show-page";
+                            window.location.href = "../bbs-module/index";
                         }
                     }else if(data['paramError'] == 1){
 				        window.location.href = "redirect:error.jsp";

@@ -1,10 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page isELIgnored="false" %>
-<script type="text/javascript">
-	$(document).ready(function () {
-		$("#addNewPassword").hide();
-    })
-</script>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -38,14 +33,11 @@
 					<div class="fh5co-form animate-box" data-animate-effect="fadeInLeft">
 						<h2>Forgot Password</h2>
 						<div class="form-group">
-							<div class="alert alert-success" role="alert">Your phone has been sent.</div>
+							<div class="alert alert-success" role="alert">通过您注册时的用户名和手机号找回.</div>
 						</div>
 						<div class="form-group">
 							<input type="text" class="form-control" id="name" placeholder="Name" autocomplete="off">
 							<input type="text" class="form-control" id="phone" placeholder="Phone" autocomplete="off">
-						</div>
-						<div class="form-group">
-							<p><a href="registered.html">Sign In</a> or <a href="login-page.html">Sign Up</a></p>
 						</div>
 
 						<div class="form-group">
@@ -55,10 +47,14 @@
 						<div class="form-group" id="addNewPassword">
 							<input type="text" class="form-control" id="newPassword" placeholder="newPassword">
 							<input type="text" class="form-control" id="reNewPassword" placeholder="re-Password">
+
+							<div class="form-group">
+								<input type="submit" value="Send" id="submit" class="btn btn-primary">
+							</div>
 						</div>
 
 						<div class="form-group">
-							<input type="submit" value="Send" id="submit" class="btn btn-primary">
+							<p><a href="registered.html">Sign In</a> or <a href="login-page.html">Sign Up</a></p>
 						</div>
 					</div>
 
@@ -66,7 +62,7 @@
 				</div>
 			</div>
 		</div>
-	
+
 	<!-- jQuery -->
 	<script src="../js/jquery.min.js"></script>
 	<!-- Bootstrap -->
@@ -81,6 +77,10 @@
 	</body>
 </html>
 <script>
+    $(document).ready(function () {
+        document.getElementById("addNewPassword").style.display = 'none'
+    })
+
 	$("#submitPhone").click(function checkIsExistUser() {
 	    var username = $("#name").val();
 	    var phone = $("#phone").val();
@@ -91,7 +91,8 @@
             type:'POST',
 			success:function (data) {
 				if(data == "exist"){
-				    $("#addNewPassword").show();
+				    alert("确认成功");
+                    document.getElementById("addNewPassword").style.display = ''
 				}else if(data == "no"){
 				    alert("该用户不存在");
 				}else{

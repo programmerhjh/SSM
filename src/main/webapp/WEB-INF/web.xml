@@ -9,9 +9,8 @@
          version="3.0">
   <display-name>Archetype Created Web Application</display-name>
   <welcome-file-list>
-    <welcome-file>/index.jsp</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
-
   <!--
       防止jndi （DEBUG级别）的报错
    -->
@@ -94,4 +93,5 @@
     <!--分钟为单位-->
     <session-timeout>15</session-timeout>
   </session-config>
+
 </web-app>

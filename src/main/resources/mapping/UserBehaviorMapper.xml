@@ -2,24 +2,4 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ssm.mapper.UserBehaviorMapper">
     
-    <resultMap id="userBehaviorResultMap" type="com.ssm.model.UserBehavior">
-        <id property="id" column="id"/>
-        <result property="userHasCompleteFormation" column="userHasCompleteFormation"/>
-        <association property="user" resultMap="userResultMap"/>
-    </resultMap>
-
-    <resultMap id="userResultMap" type="com.ssm.model.User">
-        <id property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="phone" column="phone"/>
-        <result property="email" column="email"/>
-        <result property="password" column="password"/>
-        <result property="birth" column="birth"/>
-        <result property="description" column="description"/>
-        <result property="age" column="age"/>
-        <result property="address" column="address"/>
-    </resultMap>
-
-
-    
 </mapper>

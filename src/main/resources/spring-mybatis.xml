@@ -44,6 +44,14 @@
         <property name="minIdle" value="${minIdle}"></property>
         <!-- 获取连接最大等待时间 -->
         <property name="maxWait" value="${maxWait}"></property>
+
+        <property name="testWhileIdle" value="${testWhileIdle}"/>
+
+        <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}"/>
+
+        <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}"/>
+
+        <property name="testOnBorrow" value="${testOnBorrow}"/>
     </bean>
 
     <!-- mybatis和spring完美整合，不需要mybatis的配置映射文件 -->

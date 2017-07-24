@@ -2,6 +2,7 @@ package com.ssm.service.impl;
 
 import com.ssm.mapper.UserMapper;
 import com.ssm.model.User;
+import com.ssm.model.UserExpand;
 import com.ssm.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,9 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserMapper userMapper;
 
-    public User checkUserExist(String name, String password) {
+
+
+    public UserExpand checkUserExist(String name, String password) {
         return userMapper.checkUserExist(name, password);
     }
 
@@ -40,7 +43,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.checkUserHasCompleteFormation(user);
     }
 
-    public void updateUserHasCompleteFormation(User user){
+    public void updateUserHasCompleteFormation(UserExpand user){
         userMapper.updateUserHasCompleteFormation(user);
         userMapper.updateUserBehavior(user);
     }

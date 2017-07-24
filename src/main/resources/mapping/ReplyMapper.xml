@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.ReplyMapper">
+
+    <resultMap id="BaseReplyMap" type="com.ssm.model.Reply">
+        <id property="replyId" column="reply_id" jdbcType="INTEGER"/>
+        <result property="replyReply" column="reply_reply" jdbcType="VARCHAR"/>
+        <result property="replyCreatetime" column="reply_createtime" jdbcType="DATE"/>
+    </resultMap>
+
+    <resultMap id="ReplyCustomMap" extends="BaseReplyMap" type="com.ssm.model.ReplyCustom">
+        <association property="replyUser" javaType="com.ssm.model.UserExpand">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="headAddress" column="headAddress" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
+    <select id="getReplyList" parameterType="java.lang.Integer" resultMap="ReplyCustomMap">
+      SELECT distinct u.id,u.name,u.headaddress,r.reply_id,r.reply_reply,r.reply_createtime from user u,comment c,reply r where #{commentId}=r.reply_comment and u.id=r.reply_user
+    </select>
+
+</mapper>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -11,9 +11,11 @@
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
     <!-- 扫描静态资源文件 -->
-    <mvc:resources location="WEB-INF/jsp/images/" mapping="/images/**"/>
-    <mvc:resources location="WEB-INF/jsp/js/" mapping="/js/**"/>
-    <mvc:resources location="WEB-INF/jsp/css/" mapping="/css/**"/>
+    <mvc:resources location="/WEB-INF/jsp/images/" mapping="/images/**"/>
+    <mvc:resources location="/WEB-INF/jsp/js/" mapping="/js/**"/>
+    <mvc:resources location="/WEB-INF/jsp/css/" mapping="/css/**"/>
+    <!-- 可以直接访问服务器图片资源文件，但不能直接把文件放在WEB-INF下，引用必须使用JSTL的c标签 -->
+    <mvc:default-servlet-handler/>
 
     <!-- 扫描controller，service，dao类的文件 -->
     <context:component-scan base-package="com.ssm.controller"/>

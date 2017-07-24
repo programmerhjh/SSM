@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.PostMapper">
+
+  <resultMap id="PostSpecificMap" type="com.ssm.vo.PostSpecificVo" extends="ResultMapWithBLOBs">
+    <association property="user" javaType="com.ssm.model.UserExpand">
+      <id property="id" column="id" jdbcType="INTEGER"/>
+      <result property="name" column="name" jdbcType="VARCHAR"/>
+      <result property="headAddress" column="headAddress" jdbcType="VARCHAR"/>
+    </association>
+  </resultMap>
+
+
+  <!-- 帖子对评论一对多,帖子对用户一对一 -->
+  <resultMap extends="ResultMapWithBLOBs" id="PostCustomMap" type="com.ssm.model.PostCustom">
+    <association property="user" javaType="com.ssm.model.User">
+      <id property="id" column="id"/>
+      <result property="name" column="name"/>
+      <result property="phone" column="phone"/>
+      <result property="email" column="email"/>
+      <result property="password" column="password"/>
+      <result property="birth" column="birth"/>
+      <result property="description" column="description"/>
+      <result property="age" column="age"/>
+      <result property="address" column="address"/>
+    </association>
+    <collection property="comments" ofType="com.ssm.model.Comment" column="comment_post">
+      <id column="comment_id" jdbcType="INTEGER" property="commentId" />
+      <result column="comment_user" jdbcType="INTEGER" property="commentUser" />
+      <result column="comment_createtime" jdbcType="DATE" property="commentCreatetime" />
+      <result column="comment_post" jdbcType="INTEGER" property="commentPost" />
+      <result column="comment_comment" jdbcType="LONGVARCHAR" property="commentComment" />
+    </collection>
+  </resultMap>
+
+  <!-- 用于主页帖子显示的resultMap -->
+  <resultMap id="postForIndexView" type="com.ssm.vo.BBSIndexPostsQueryVo">
+    <id column="post_id" property="postId" jdbcType="INTEGER"/>
+    <result column="post_name" jdbcType="VARCHAR" property="postName" />
+    <result column="post_createtime" jdbcType="DATE" property="postCreatetime" />
+    <result column="post_clicktimes" jdbcType="INTEGER" property="postClicktimes" />
+    <result column="post_category" jdbcType="VARCHAR" property="postCategory" />
+    <association property="user" javaType="com.ssm.model.User">
+      <result property="name" column="name"/>
+    </association>
+  </resultMap>
+
+  <resultMap id="BaseResultMap" type="com.ssm.model.Post">
+    <id column="post_id" jdbcType="INTEGER" property="postId" />
+    <result column="post_name" jdbcType="VARCHAR" property="postName" />
+    <result column="post_createtime" jdbcType="DATE" property="postCreatetime" />
+    <result column="post_author" jdbcType="INTEGER" property="postAuthor" />
+    <result column="post_clicktimes" jdbcType="INTEGER" property="postClicktimes" />
+    <result column="post_category" jdbcType="VARCHAR" property="postCategory" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.ssm.model.Post">
+    <result column="post_post" jdbcType="LONGVARCHAR" property="postPost" />
+  </resultMap>
+  <sql id="Post_Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Post_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Post_Base_Column_List">
+    post_id, post_name, post_createtime, post_author, post_clicktimes, post_category
+  </sql>
+  <sql id="Post_Blob_Column_List">
+    post_post
+  </sql>
+  <select id="selectByPostExampleWithBLOBs" parameterType="com.ssm.model.PostExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Post_Base_Column_List" />
+    ,
+    <include refid="Post_Blob_Column_List" />
+    from post
+    <if test="_parameter != null">
+      <include refid="Post_Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectHotArticle" resultMap="postForIndexView">
+    select post_id,post_name,post_createtime,post_clicktimes,post_category,name from post p,user u WHERE p.post_author=u.id order by p.post_clicktimes desc limit 6
+  </select>
+  <select id="selectLastArticle" resultMap="postForIndexView">
+    select post_id,post_name,post_createtime,post_clicktimes,post_category,name from post p,user u WHERE p.post_author=u.id order by p.post_id desc limit 6
+  </select>
+  <select id="selectByPostExample" parameterType="com.ssm.model.PostExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Post_Base_Column_List" />
+    from post
+    <if test="_parameter != null">
+      <include refid="Post_Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPostPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Post_Base_Column_List" />
+    ,
+    <include refid="Post_Blob_Column_List" />
+    from post
+    where post_id = #{postId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPostPrimaryKey" parameterType="java.lang.Integer">
+    delete from post
+    where post_id = #{postId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByPostExample" parameterType="com.ssm.model.PostExample">
+    delete from post
+    <if test="_parameter != null">
+      <include refid="Post_Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insertPost" parameterType="com.ssm.model.Post">
+    insert into post (post_name, post_createtime,post_author, post_category,post_post)
+    values ( #{postName,jdbcType=VARCHAR}, #{postCreatetime,jdbcType=DATE},
+      #{postAuthor,jdbcType=INTEGER}, #{postCategory,jdbcType=VARCHAR},
+      #{postPost,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertPostSelective" parameterType="com.ssm.model.Post">
+    insert into post
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="postId != null">
+        post_id,
+      </if>
+      <if test="postName != null">
+        post_name,
+      </if>
+      <if test="postCreatetime != null">
+        post_createtime,
+      </if>
+      <if test="postAuthor != null">
+        post_author,
+      </if>
+      <if test="postClicktimes != null">
+        post_clicktimes,
+      </if>
+      <if test="postCategory != null">
+        post_category,
+      </if>
+      <if test="postPost != null">
+        post_post,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="postId != null">
+        #{postId,jdbcType=INTEGER},
+      </if>
+      <if test="postName != null">
+        #{postName,jdbcType=VARCHAR},
+      </if>
+      <if test="postCreatetime != null">
+        #{postCreatetime,jdbcType=DATE},
+      </if>
+      <if test="postAuthor != null">
+        #{postAuthor,jdbcType=INTEGER},
+      </if>
+      <if test="postClicktimes != null">
+        #{postClicktimes,jdbcType=INTEGER},
+      </if>
+      <if test="postCategory != null">
+        #{postCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="postPost != null">
+        #{postPost,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="getPostSpecific" parameterType="java.lang.Integer" resultMap="PostSpecificMap">
+    SELECT u.id,u.name,u.headaddress,p.post_name,p.post_createtime,p.post_id,p.post_author,p.post_clicktimes,p.post_category,p.post_post from user u,post p where p.post_id=#{postId} and u.id=p.post_author
+  </select>
+
+
+
+  <!--  SELECT u.id,u.name,p.post_name,p.post_createtime,p.post_id,p.post_author,p.post_clicktimes,p.post_category,p.post_post,c.comment_id,c.comment_user,c.comment_createtime,c.comment_post,c.comment_comment,r.reply_id,r.reply_reply,r.reply_createtime FROM post p left outer join user u on p.post_author=u.id left outer join comment c on c.comment_post=p.post_id left outer join reply r on r.reply_comment=c.comment_id where p.post_id=#{postId}  -->
+
+
+
+  <select id="countByPostExample" parameterType="com.ssm.model.PostExample" resultType="java.lang.Integer">
+    select count(*) from post
+    <if test="_parameter != null">
+      <include refid="Post_Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPostExampleSelective" parameterType="map">
+    update post
+    <set>
+      <if test="record.postId != null">
+        post_id = #{record.postId,jdbcType=INTEGER},
+      </if>
+      <if test="record.postName != null">
+        post_name = #{record.postName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.postCreatetime != null">
+        post_createtime = #{record.postCreatetime,jdbcType=DATE},
+      </if>
+      <if test="record.postAuthor != null">
+        post_author = #{record.postAuthor,jdbcType=INTEGER},
+      </if>
+      <if test="record.postClicktimes != null">
+        post_clicktimes = #{record.postClicktimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.postCategory != null">
+        post_category = #{record.postCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="record.postPost != null">
+        post_post = #{record.postPost,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Post_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPostExampleWithBLOBs" parameterType="map">
+    update post
+    set post_id = #{record.postId,jdbcType=INTEGER},
+      post_name = #{record.postName,jdbcType=VARCHAR},
+      post_createtime = #{record.postCreatetime,jdbcType=DATE},
+      post_author = #{record.postAuthor,jdbcType=INTEGER},
+      post_clicktimes = #{record.postClicktimes,jdbcType=INTEGER},
+      post_category = #{record.postCategory,jdbcType=VARCHAR},
+      post_post = #{record.postPost,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Post_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPostExample" parameterType="map">
+    update post
+    set post_id = #{record.postId,jdbcType=INTEGER},
+      post_name = #{record.postName,jdbcType=VARCHAR},
+      post_createtime = #{record.postCreatetime,jdbcType=DATE},
+      post_author = #{record.postAuthor,jdbcType=INTEGER},
+      post_clicktimes = #{record.postClicktimes,jdbcType=INTEGER},
+      post_category = #{record.postCategory,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Post_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="addClickTime">
+    update post p,user u set post_clicktimes=post_clicktimes+1 WHERE u.name=#{username} and u.id = p.post_author and p.post_name = #{postname}
+  </update>
+  <update id="updateByPostPrimaryKeySelective" parameterType="com.ssm.model.Post">
+    update post
+    <set>
+      <if test="postName != null">
+        post_name = #{postName,jdbcType=VARCHAR},
+      </if>
+      <if test="postCreatetime != null">
+        post_createtime = #{postCreatetime,jdbcType=DATE},
+      </if>
+      <if test="postAuthor != null">
+        post_author = #{postAuthor,jdbcType=INTEGER},
+      </if>
+      <if test="postClicktimes != null">
+        post_clicktimes = #{postClicktimes,jdbcType=INTEGER},
+      </if>
+      <if test="postCategory != null">
+        post_category = #{postCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="postPost != null">
+        post_post = #{postPost,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where post_id = #{postId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPostPrimaryKeyWithBLOBs" parameterType="com.ssm.model.Post">
+    update post
+    set post_name = #{postName,jdbcType=VARCHAR},
+      post_createtime = #{postCreatetime,jdbcType=DATE},
+      post_author = #{postAuthor,jdbcType=INTEGER},
+      post_clicktimes = #{postClicktimes,jdbcType=INTEGER},
+      post_category = #{postCategory,jdbcType=VARCHAR},
+      post_post = #{postPost,jdbcType=LONGVARCHAR}
+    where post_id = #{postId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPostPrimaryKey" parameterType="com.ssm.model.Post">
+    update post
+    set post_name = #{postName,jdbcType=VARCHAR},
+      post_createtime = #{postCreatetime,jdbcType=DATE},
+      post_author = #{postAuthor,jdbcType=INTEGER},
+      post_clicktimes = #{postClicktimes,jdbcType=INTEGER},
+      post_category = #{postCategory,jdbcType=VARCHAR}
+    where post_id = #{postId,jdbcType=INTEGER}
+  </update>
+</mapper>
