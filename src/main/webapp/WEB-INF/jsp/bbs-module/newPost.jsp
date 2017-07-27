@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!doctype html>
         <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en-US"> <![endif]-->
         <!--[if IE 7]>    <html class="lt-ie9 lt-ie8" lang="en-US"> <![endif]-->
@@ -52,23 +53,25 @@
                                         <nav class="main-nav">
                                                 <div class="menu-top-menu-container">
                                                         <ul id="menu-top-menu" class="clearfix">
-                                                                <li><a href="#">More</a>
-                                                                        <ul class="sub-menu">
-                                                                                <li><a href="full-width.html">Full Width</a></li>
-                                                                                <li><a href="elements.html">Elements</a></li>
-                                                                                <li><a href="page.html">Sample Page</a></li>
-                                                                        </ul>
-                                                                </li>
-                                                                <li>
-                                                                        <c:choose>
-                                                                                <c:when test="${sessionScope.user == null}">
+                                                                <c:choose>
+                                                                        <c:when test="${sessionScope.user == null}">
+                                                                                <li>
                                                                                         <a href="../login-module/login-page" style="color: #2f96b4">您还未登录</a>
-                                                                                </c:when>
-                                                                                <c:otherwise>
+                                                                                </li>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                                <li><a href="#">More</a>
+                                                                                        <ul class="sub-menu">
+                                                                                                <li><a href="../login-module/organizing_data">修改个人资料</a></li>
+                                                                                                <li><a href="../login-module/forgot-password">修改密码</a></li>
+                                                                                                <li><a href="../login-module/loginOut">注销</a></li>
+                                                                                        </ul>
+                                                                                </li>
+                                                                                <li>
                                                                                         <span style="color: #a9dba9">${sessionScope.user.name},你好</span>
-                                                                                </c:otherwise>
-                                                                        </c:choose>
-                                                                </li>
+                                                                                </li>
+                                                                        </c:otherwise>
+                                                                </c:choose>
                                                         </ul>
                                                 </div>
                                         </nav>
@@ -83,11 +86,11 @@
                                 <h3 class="search-header">有问题?当然是上问坛啊！</h3>
                                 <p class="search-tag-line">在这里可以看到你所感兴趣方面的知识或者得到一些额外的资源</p>
 
-                                <form id="search-form" class="search-form clearfix" method="get" action="#" autocomplete="off">
-                                        <input class="search-term" type="text" id="s" name="s" placeholder="开始搜索" title="搜索中.." />
+                                <form:form id="search-form" class="search-form clearfix" method="get" action="search" autocomplete="off">
+                                        <input class="search-term1" type="text" id="search" name="search" placeholder="开始搜索" title="搜索中.." />
                                         <input class="search-btn" type="submit" value="Search" />
                                         <div id="search-error-container"></div>
-                                </form>
+                                </form:form>
                         </div>
                 </div>
                 <!-- End of Search Wrapper -->

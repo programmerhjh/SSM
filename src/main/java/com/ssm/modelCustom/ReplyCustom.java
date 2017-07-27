@@ -1,4 +1,6 @@
-package com.ssm.model;
+package com.ssm.modelCustom;
+
+import com.ssm.model.Reply;
 
 /**
  * Created by acer on 2017/7/24.
@@ -15,10 +17,4 @@ public class ReplyCustom extends Reply {
         this.replyUser = replyUser;
     }
 
-    @Override
-    public String toString() {
-        return "ReplyCustom{" +
-                "replyUser=" + replyUser +
-                '}';
-    }
 }

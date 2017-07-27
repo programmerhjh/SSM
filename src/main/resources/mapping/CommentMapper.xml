@@ -3,7 +3,7 @@
 <mapper namespace="com.ssm.mapper.CommentMapper">
 
   <!-- 每条评论只能对应一个用户,每条评论只能对应一篇帖子 -->
-  <resultMap extends="ResultMapWithBLOBs" id="CommentCustomMap" type="com.ssm.model.CommentCustom">
+  <resultMap extends="ResultMapWithBLOBs" id="CommentCustomMap" type="com.ssm.modelCustom.CommentCustom">
     <association property="user" javaType="com.ssm.model.User">
       <id property="id" column="id"/>
       <result property="name" column="name"/>
@@ -28,7 +28,7 @@
   
 
   <resultMap id="CommentAndReplyVo" extends="ResultMapWithBLOBs" type="com.ssm.vo.CommentAndReplyVo">
-    <association property="commentUserVo" javaType="com.ssm.model.UserExpand">
+    <association property="commentUserVo" javaType="com.ssm.modelCustom.UserExpand">
       <id property="id" column="id" jdbcType="INTEGER"/>
       <result property="name" column="name" jdbcType="VARCHAR"/>
       <result property="headAddress" column="headAddress" jdbcType="VARCHAR"/>
@@ -38,10 +38,9 @@
   <resultMap id="BaseResultMap" type="com.ssm.model.Comment">
     <id column="comment_id" jdbcType="INTEGER" property="commentId" />
     <result column="comment_user" jdbcType="INTEGER" property="commentUser" />
-    <result column="comment_createtime" jdbcType="DATE" property="commentCreatetime" />
+    <result column="comment_createtime" jdbcType="TIMESTAMP" property="commentCreatetime" />
     <result column="comment_post" jdbcType="INTEGER" property="commentPost" />
   </resultMap>
-
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.ssm.model.Comment">
     <result column="comment_comment" jdbcType="LONGVARCHAR" property="commentComment" />
   </resultMap>
@@ -113,6 +112,10 @@
     comment_comment
   </sql>
 
+  <select id="selectPostComments" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select distinct * from comment c where c.comment_post=#{postId}
+  </select>
+
   <select id="selectByCommentExampleWithBLOBs" parameterType="com.ssm.model.CommentExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
@@ -173,6 +176,11 @@
     values (#{commentId,jdbcType=INTEGER}, #{commentUser,jdbcType=INTEGER}, #{commentCreatetime,jdbcType=DATE}, 
       #{commentPost,jdbcType=INTEGER}, #{commentComment,jdbcType=LONGVARCHAR})
   </insert>
+
+  <insert id="addCommentForPost">
+    INSERT INTO comment(comment_user,comment_post,comment_comment) VALUES (#{userId},#{postId},#{commentText})
+  </insert>
+
   <insert id="insertCommentSelective" parameterType="com.ssm.model.Comment">
     insert into comment
     <trim prefix="(" suffix=")" suffixOverrides=",">

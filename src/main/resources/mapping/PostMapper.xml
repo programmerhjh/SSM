@@ -3,7 +3,7 @@
 <mapper namespace="com.ssm.mapper.PostMapper">
 
   <resultMap id="PostSpecificMap" type="com.ssm.vo.PostSpecificVo" extends="ResultMapWithBLOBs">
-    <association property="user" javaType="com.ssm.model.UserExpand">
+    <association property="user" javaType="com.ssm.modelCustom.UserExpand">
       <id property="id" column="id" jdbcType="INTEGER"/>
       <result property="name" column="name" jdbcType="VARCHAR"/>
       <result property="headAddress" column="headAddress" jdbcType="VARCHAR"/>
@@ -12,7 +12,7 @@
 
 
   <!-- 帖子对评论一对多,帖子对用户一对一 -->
-  <resultMap extends="ResultMapWithBLOBs" id="PostCustomMap" type="com.ssm.model.PostCustom">
+  <resultMap extends="ResultMapWithBLOBs" id="PostCustomMap" type="com.ssm.modelCustom.PostCustom">
     <association property="user" javaType="com.ssm.model.User">
       <id property="id" column="id"/>
       <result property="name" column="name"/>
@@ -24,6 +24,16 @@
       <result property="age" column="age"/>
       <result property="address" column="address"/>
     </association>
+    <collection property="comments" ofType="com.ssm.model.Comment" column="comment_post">
+      <id column="comment_id" jdbcType="INTEGER" property="commentId" />
+      <result column="comment_user" jdbcType="INTEGER" property="commentUser" />
+      <result column="comment_createtime" jdbcType="DATE" property="commentCreatetime" />
+      <result column="comment_post" jdbcType="INTEGER" property="commentPost" />
+      <result column="comment_comment" jdbcType="LONGVARCHAR" property="commentComment" />
+    </collection>
+  </resultMap>
+
+  <resultMap extends="ResultMapWithBLOBs" id="PostArticleCustomMap" type="com.ssm.modelCustom.PostArticleCustom">
     <collection property="comments" ofType="com.ssm.model.Comment" column="comment_post">
       <id column="comment_id" jdbcType="INTEGER" property="commentId" />
       <result column="comment_user" jdbcType="INTEGER" property="commentUser" />
@@ -120,6 +130,11 @@
   <sql id="Post_Blob_Column_List">
     post_post
   </sql>
+
+  <select id="searchPostData" parameterType="java.lang.String" resultMap="PostArticleCustomMap">
+    SELECT * FROM post WHERE post_name LIKE CONCAT(CONCAT('%', #{data}), '%')
+  </select>
+
   <select id="selectByPostExampleWithBLOBs" parameterType="com.ssm.model.PostExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
@@ -164,6 +179,15 @@
     from post
     where post_id = #{postId,jdbcType=INTEGER}
   </select>
+
+  <select id="selectAllPostList" resultMap="PostArticleCustomMap">
+    select distinct * from post
+  </select>
+
+  <select id="selectUserPostList" parameterType="java.lang.Integer" resultMap="PostArticleCustomMap">
+    select distinct * from post WHERE post_author=#{userId}
+  </select>
+
   <delete id="deleteByPostPrimaryKey" parameterType="java.lang.Integer">
     delete from post
     where post_id = #{postId,jdbcType=INTEGER}

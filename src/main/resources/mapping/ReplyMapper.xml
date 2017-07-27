@@ -5,19 +5,58 @@
     <resultMap id="BaseReplyMap" type="com.ssm.model.Reply">
         <id property="replyId" column="reply_id" jdbcType="INTEGER"/>
         <result property="replyReply" column="reply_reply" jdbcType="VARCHAR"/>
-        <result property="replyCreatetime" column="reply_createtime" jdbcType="DATE"/>
+        <result property="replyCreatetime" column="reply_createtime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <resultMap id="ReplyCustomMap" extends="BaseReplyMap" type="com.ssm.model.ReplyCustom">
-        <association property="replyUser" javaType="com.ssm.model.UserExpand">
+    <resultMap id="ReplyPostMap" extends="NormalReplyMap" type="com.ssm.modelCustom.ReplyPostCustom" >
+        <association property="post" javaType="com.ssm.model.Post">
+            <id column="post_id" jdbcType="INTEGER" property="postId" />
+            <result column="post_name" jdbcType="VARCHAR" property="postName" />
+        </association>
+    </resultMap>
+
+    <resultMap id="NormalReplyMap" type="com.ssm.model.Reply">
+        <id property="replyId" column="reply_id" jdbcType="INTEGER"/>
+        <result property="replyReply" column="reply_reply" jdbcType="VARCHAR"/>
+        <result property="replyCreatetime" column="reply_createtime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="ReplyCustomMap" extends="BaseReplyMap" type="com.ssm.modelCustom.ReplyCustom">
+        <association property="replyUser" javaType="com.ssm.modelCustom.UserExpand">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="headAddress" column="headAddress" jdbcType="VARCHAR"/>
         </association>
     </resultMap>
 
+    <insert id="addReplyForComment">
+        INSERT INTO reply(reply_user,reply_post,reply_comment,reply_reply) VALUES (#{userId},#{postId},#{commentId},#{replyReply})
+    </insert>
+
     <select id="getReplyList" parameterType="java.lang.Integer" resultMap="ReplyCustomMap">
       SELECT distinct u.id,u.name,u.headaddress,r.reply_id,r.reply_reply,r.reply_createtime from user u,comment c,reply r where #{commentId}=r.reply_comment and u.id=r.reply_user
+    </select>
+
+    <select id="getReplyInstance" resultMap="ReplyCustomMap">
+      select r.reply_reply,r.reply_createtime,r.reply_id,u.id,u.name,u.headaddress from reply r,user u where r.reply_id=(select max(reply_id) from reply) and u.id=r.reply_user
+    </select>
+
+    <select id="selectByReplyPrimaryKey" parameterType="java.lang.Integer" resultMap="NormalReplyMap">
+        select
+        r.reply_createtime,r.reply_comment
+        from reply r
+        where reply_id = #{replyId,jdbcType=INTEGER}
+    </select>
+
+    <select id="getReplyPostList" parameterType="java.lang.Integer" resultMap="ReplyPostMap">
+        SELECT
+        *
+        FROM
+        reply r,post p
+		WHERE
+        r.reply_user=#{userId} AND p.post_id=r.reply_post
+        order by
+        reply_createtime desc
     </select>
 
 </mapper>

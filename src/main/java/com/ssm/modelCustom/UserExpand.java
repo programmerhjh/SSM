@@ -1,9 +1,11 @@
-package com.ssm.model;
+package com.ssm.modelCustom;
+
+import com.ssm.model.User;
 
 /**
  * Created by acer on 2017/7/24.
  */
-public class UserExpand extends User{
+public class UserExpand extends User {
     private String headAddress;
 
     public String getHeadAddress() {

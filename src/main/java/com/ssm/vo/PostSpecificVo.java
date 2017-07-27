@@ -1,8 +1,7 @@
 package com.ssm.vo;
 
 import com.ssm.model.Post;
-import com.ssm.model.User;
-import com.ssm.model.UserExpand;
+import com.ssm.modelCustom.UserExpand;
 
 import java.util.List;
 

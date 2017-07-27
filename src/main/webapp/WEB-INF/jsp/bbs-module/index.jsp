@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
         <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="zh-CN"> <![endif]-->
         <!--[if IE 7]>    <html class="lt-ie9 lt-ie8" lang="zh-CN"> <![endif]-->
@@ -74,11 +75,11 @@
                                 <h3 class="search-header">有问题?当然是上问坛啊！</h3>
                                 <p class="search-tag-line">在这里可以看到你所感兴趣方面的知识或者得到一些额外的资源</p>
 
-                                <form id="search-form" class="search-form clearfix" method="get" action="#" autocomplete="off">
-                                        <input class="search-term1" type="text" id="s" name="s" placeholder="开始搜索" title="搜索中.." />
+                                <form:form id="search-form" class="search-form clearfix" method="get" action="search" autocomplete="off">
+                                        <input class="search-term1" type="text" id="search" name="search" placeholder="开始搜索" title="搜索中.." />
                                         <input class="search-btn" type="submit" value="Search" />
                                         <div id="search-error-container"></div>
-                                </form>
+                                </form:form>
                         </div>
                 </div>
 
@@ -141,10 +142,10 @@
                                                                 <h3 class="title">Quick Links</h3>
                                                                 <ul id="menu-quick-links" class="menu clearfix">
                                                                         <li><a href="index">主页</a></li>
-                                                                        <li><a href="articles-list.html">文章列表</a></li>
+                                                                        <li><a href="article-list">文章列表</a></li>
                                                                         <c:if test="${sessionScope.user != null}">
                                                                                 <li><a href="myPost">我的帖子</a></li>
-                                                                                <li><a href="myMessage">我的消息</a></li>
+                                                                                <li><a href="myReply">我的回复</a></li>
                                                                         </c:if>
                                                                 </ul>
                                                         </div>

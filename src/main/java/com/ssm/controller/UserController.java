@@ -1,8 +1,7 @@
 package com.ssm.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.ssm.model.User;
-import com.ssm.model.UserExpand;
+import com.ssm.modelCustom.UserExpand;
 import com.ssm.service.UserService;
 import implement.IndustrySMS;
 import org.apache.log4j.Logger;
@@ -12,7 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;

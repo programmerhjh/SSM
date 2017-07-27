@@ -1,8 +1,11 @@
 package com.ssm.service;
 
+import com.ssm.model.Comment;
 import com.ssm.model.Post;
+import com.ssm.modelCustom.PostArticleCustom;
 import com.ssm.vo.BBSIndexPostsQueryVo;
 import com.ssm.vo.PostSpecificVo;
+import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
 
@@ -11,7 +14,15 @@ import java.util.List;
  */
 public interface PostService {
 
+    List<PostArticleCustom> searchPostData(String data,RowBounds rowBounds);
+
+    List<Comment> selectPostComments(Integer postId);
+
     PostSpecificVo getPostSpecific(Integer postId);
+
+    List<PostArticleCustom> selectAllPostList(RowBounds rowBounds);
+
+    List<PostArticleCustom> selectUserPostList(int userId,RowBounds rowBounds);
 
     //热门文章
     List<BBSIndexPostsQueryVo> queryHotPost();

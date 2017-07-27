@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ssm.mapper.UserMapper">
 
-    <resultMap id="userResultMap" type="com.ssm.model.UserCustom">
+    <resultMap id="userResultMap" type="com.ssm.modelCustom.UserCustom">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="phone" column="phone"/>
@@ -34,7 +34,7 @@
     </resultMap>
 
     
-    <select id="checkUserExist" resultType="com.ssm.model.UserExpand">
+    <select id="checkUserExist" resultType="com.ssm.modelCustom.UserExpand">
         SELECT * FROM user u WHERE u.name=#{name} AND u.password=#{password}
     </select>
 
@@ -46,7 +46,7 @@
         SELECT count(id) FROM user WHERE name=#{username}
     </select>
 
-    <update id="updateUserHasCompleteFormation" parameterType="com.ssm.model.UserExpand">
+    <update id="updateUserHasCompleteFormation" parameterType="com.ssm.modelCustom.UserExpand">
         UPDATE user u SET
         u.name=#{user.name},u.phone=#{user.phone},u.email=#{user.email},u.password=#{user.password},u.birth=#{user.birth},
         u.description=#{user.description},u.age=#{user.age},u.address=#{user.address},u.headAddress=#{user.headAddress} WHERE u.id=#{user.id}

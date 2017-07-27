@@ -1,18 +1,26 @@
 package com.ssm.mapper;
 
 import com.ssm.model.Post;
-import com.ssm.model.PostCustom;
 import com.ssm.model.PostExample;
-import java.util.List;
-
+import com.ssm.modelCustom.PostArticleCustom;
 import com.ssm.vo.BBSIndexPostsQueryVo;
 import com.ssm.vo.PostSpecificVo;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
+import java.util.List;
+
 @Repository
 public interface PostMapper extends Mapper<Post> {
+
+
+    List<PostArticleCustom> selectUserPostList(@Param("userId") int userId,RowBounds rowBounds);
+
+    List<PostArticleCustom> selectAllPostList(RowBounds rowBounds);
+
+    List<PostArticleCustom> searchPostData(@Param("data") String data,RowBounds rowBounds);
 
     PostSpecificVo getPostSpecific(Integer postId);
 

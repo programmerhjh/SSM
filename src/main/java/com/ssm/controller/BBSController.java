@@ -1,13 +1,22 @@
 package com.ssm.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import com.ssm.model.Post;
+import com.ssm.model.User;
+import com.ssm.modelCustom.PostArticleCustom;
+import com.ssm.modelCustom.ReplyCustom;
+import com.ssm.modelCustom.ReplyPostCustom;
+import com.ssm.modelCustom.UserExpand;
+import com.ssm.service.CommentService;
 import com.ssm.service.PostService;
-import com.ssm.service.UserService;
+import com.ssm.service.ReplyService;
 import com.ssm.vo.BBSIndexPostsQueryVo;
 import com.ssm.vo.PostSpecificVo;
 import org.apache.log4j.Logger;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import tool.JsonToMap;
+import tool.PageTool;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -25,11 +35,10 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static tool.JsonToMap.toHashMap;
 
 /**
  * Created by acer on 2017/7/17.
@@ -42,6 +51,51 @@ public class BBSController {
 
     @Resource
     private PostService postService;
+
+    @Resource
+    private CommentService commentService;
+
+    @Resource
+    private ReplyService replyService;
+
+    @RequestMapping("search")
+    public String search(@RequestBody(required = false) String pageData,HttpServletRequest request, HttpServletResponse response){
+        String data = request.getParameter("search");
+        List<PostArticleCustom> list;
+        if(data!=null){
+            list = postService.searchPostData(data,PageTool.device(pageData));
+        }else {
+            list = postService.searchPostData("",PageTool.device(pageData));
+        }
+        Page pageTemp = (Page) list;
+        PageInfo<PostArticleCustom> page = new PageInfo<PostArticleCustom>(list,pageTemp.getPages());
+        request.setAttribute("page",page);
+
+        return "bbs-module/search";
+    }
+
+    @RequestMapping("searchPage")
+    public void searchPage(@RequestBody(required = false) String pageData,HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String data = request.getParameter("search");
+        List<PostArticleCustom> list;
+        if(data!=null){
+            list = postService.searchPostData(data,PageTool.device(pageData));
+        }else {
+            list = postService.searchPostData("",PageTool.device(pageData));
+        }
+        Page pageTemp = (Page) list;
+        PageInfo<PostArticleCustom> page = new PageInfo<PostArticleCustom>(list,pageTemp.getPages());
+        request.setAttribute("page",page);
+        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(page);
+        JSON.DEFFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+        String str = JSON.toJSONString(jsonObject, SerializerFeature.WriteDateUseDateFormat);
+        response.setContentType("text/plain; charset=utf-8");
+        Writer out = response.getWriter();
+        out.write(str);
+        out.flush();
+        out.close();
+
+    }
 
     @RequestMapping("addPost")
     public String addPost(Post post) throws ParseException {
@@ -65,12 +119,28 @@ public class BBSController {
             return "bbs-module/index";
         }
         PostSpecificVo postSpecificVo = postService.getPostSpecific(postId);
-        System.out.println(postSpecificVo);
-        System.out.println(postSpecificVo.getUser().toString());
-        System.out.println(postSpecificVo.getCommentAndReplyVos().toArray());
         request.getSession().setAttribute("post",postSpecificVo);
         return "bbs-module/postSpecific";
     }
+
+    @RequestMapping("addReplyForComment")
+    public @ResponseBody String addReplyForComment(HttpServletRequest request,HttpServletResponse response,@RequestBody String data) throws IOException {
+        Map map = JsonToMap.toHashMap(data);
+        Integer commentId = Integer.valueOf(map.get("commentId").toString());
+        String replyReply = map.get("replyReply").toString();
+        Integer postId = Integer.parseInt(map.get("postId").toString());
+        Integer userId = ((UserExpand) request.getSession().getAttribute("user")).getId();
+        if(commentId == null || replyReply == null || postId == null || userId == null){
+            return null;
+        }else {
+            replyService.addReplyForComment(userId,postId,commentId,replyReply);
+            ReplyCustom reply = replyService.getReplyInstance();
+            JSONObject jsonObject = (JSONObject) JSONObject.toJSON(reply);
+            jsonObject.put("replyCreatetime",reply.getReplyCreatetime().toString().substring(0,reply.getReplyCreatetime().toString().length()-2));
+            return jsonObject.toJSONString();
+        }
+    }
+
     @RequestMapping("addClickTime")
     public @ResponseBody String addClickTime(@RequestBody String data){
         System.out.println(data);
@@ -79,6 +149,46 @@ public class BBSController {
         String postname = map.get("postname").toString();
 
         postService.addClickTime(username,postname);
+        return "OK";
+    }
+
+    @RequestMapping("article-list")
+    public String articleList(@RequestBody(required = false) String pageData, HttpServletRequest request,HttpServletResponse response) throws IOException {
+
+        List<PostArticleCustom> postList = postService.selectAllPostList(PageTool.device(pageData));
+
+        PageInfo<PostArticleCustom> page = new PageInfo<PostArticleCustom>(postList);
+        request.setAttribute("page",page);
+
+        return "bbs-module/article-list";
+    }
+
+    @RequestMapping("articlePage")
+    public void articlePage(@RequestBody(required = false) String pageData, HttpServletRequest request,HttpServletResponse response) throws IOException{
+        List<PostArticleCustom> postList = postService.selectAllPostList(PageTool.device(pageData));
+        PageInfo<PostArticleCustom> page = new PageInfo<PostArticleCustom>(postList);
+        request.setAttribute("page",page);
+        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(page);
+        JSON.DEFFAULT_DATE_FORMAT = "yyyy-MM-dd";
+        String str = JSON.toJSONString(jsonObject, SerializerFeature.WriteDateUseDateFormat);
+        response.setContentType("text/plain; charset=utf-8");
+        Writer out = response.getWriter();
+        out.write(str);
+        out.flush();
+        out.close();
+    }
+
+    @RequestMapping("addComment")
+    public @ResponseBody String addComment(@RequestBody String data){
+        Map map = JsonToMap.toHashMap(data);
+        Integer userId = Integer.parseInt(map.get("userId").toString());
+        Integer postId = Integer.parseInt(map.get("postId").toString());
+        String commentText = map.get("commentText").toString();
+        if(userId == null || postId == null || commentText == null){
+            return null;
+        }else {
+            commentService.addCommentForPost(userId,postId,commentText);
+        }
         return "OK";
     }
 
@@ -133,6 +243,56 @@ public class BBSController {
     @RequestMapping("newPost")
     public String newPost(){
         return "bbs-module/newPost";
+    }
+
+    @RequestMapping("myPost")
+    public String myPost(@RequestBody(required = false) String data,HttpServletResponse response,HttpServletRequest request ){
+        List<PostArticleCustom> postList = postService.selectUserPostList(((User)(request.getSession().getAttribute("user"))).getId(),PageTool.device(data));
+        Page pageTemp = (Page)postList;
+        PageInfo<PostArticleCustom> page = new PageInfo<PostArticleCustom>(postList,pageTemp.getPages());
+        request.setAttribute("page",page);
+        return "bbs-module/myPost";
+    }
+
+    @RequestMapping("myPostPage")
+    public void myPostPage(@RequestBody(required = false) String data,HttpServletResponse response,HttpServletRequest request ) throws IOException {
+        List<PostArticleCustom> postList = postService.selectUserPostList(((User)(request.getSession().getAttribute("user"))).getId(),PageTool.device(data));
+        Page pageTemp = (Page)postList;
+        PageInfo<PostArticleCustom> page = new PageInfo<PostArticleCustom>(postList,pageTemp.getPages());
+        request.setAttribute("page",page);
+        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(page);
+        JSON.DEFFAULT_DATE_FORMAT = "yyyy-MM-dd";
+        String str = JSON.toJSONString(jsonObject, SerializerFeature.WriteDateUseDateFormat);
+        response.setContentType("text/plain; charset=utf-8");
+        Writer out = response.getWriter();
+        out.write(str);
+        out.flush();
+        out.close();
+    }
+
+    @RequestMapping("myReply")
+    public String myReply(@RequestBody(required = false) String data,HttpServletResponse response,HttpServletRequest request ){
+        List<ReplyPostCustom> replyList = replyService.getReplyPostList(((User)(request.getSession().getAttribute("user"))).getId(),PageTool.device(data));
+        Page pageTemp = (Page)replyList;
+        PageInfo<ReplyPostCustom> page = new PageInfo<ReplyPostCustom>(replyList,pageTemp.getPages());
+        request.setAttribute("page",page);
+        return "bbs-module/myReply";
+    }
+
+    @RequestMapping("myReplyPage")
+    public void myReplyPage(@RequestBody(required = false) String data,HttpServletResponse response,HttpServletRequest request ) throws IOException{
+        List<ReplyPostCustom> replyList = replyService.getReplyPostList(((User)(request.getSession().getAttribute("user"))).getId(),PageTool.device(data));
+        Page pageTemp = (Page)replyList;
+        PageInfo<ReplyPostCustom> page = new PageInfo<ReplyPostCustom>(replyList,pageTemp.getPages());
+        request.setAttribute("page",page);
+        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(page);
+        JSON.DEFFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+        String str = JSON.toJSONString(jsonObject, SerializerFeature.WriteDateUseDateFormat);
+        response.setContentType("text/plain; charset=utf-8");
+        Writer out = response.getWriter();
+        out.write(str);
+        out.flush();
+        out.close();
     }
 
 }

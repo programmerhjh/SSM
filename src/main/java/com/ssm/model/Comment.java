@@ -1,6 +1,7 @@
 package com.ssm.model;
 
 import javax.persistence.Table;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Table(name = "comment")
@@ -9,7 +10,7 @@ public class Comment {
 
     private Integer commentUser;
 
-    private Date commentCreatetime;
+    private Timestamp commentCreatetime;
 
     private Integer commentPost;
 
@@ -35,7 +36,7 @@ public class Comment {
         return commentCreatetime;
     }
 
-    public void setCommentCreatetime(Date commentCreatetime) {
+    public void setCommentCreatetime(Timestamp commentCreatetime) {
         this.commentCreatetime = commentCreatetime;
     }
 

@@ -1,4 +1,8 @@
-package com.ssm.model;
+package com.ssm.modelCustom;
+
+import com.ssm.model.Comment;
+import com.ssm.model.Post;
+import com.ssm.model.User;
 
 import java.util.List;
 

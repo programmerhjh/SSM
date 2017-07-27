@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="zh-CN"> <![endif]-->
 <!--[if IE 7]>    <html class="lt-ie9 lt-ie8" lang="zh-CN"> <![endif]-->
@@ -74,11 +75,11 @@
         <h3 class="search-header">有问题?当然是上问坛啊！</h3>
         <p class="search-tag-line">在这里可以看到你所感兴趣方面的知识或者得到一些额外的资源</p>
 
-        <form id="search-form" class="search-form clearfix" method="get" action="#" autocomplete="off">
-            <input class="search-term1" type="text" id="s" name="s" placeholder="开始搜索" title="搜索中.." />
+        <form:form id="search-form" class="search-form clearfix" method="get" action="search" autocomplete="off">
+            <input class="search-term1" type="text" id="search" name="search" placeholder="开始搜索" title="搜索中.." />
             <input class="search-btn" type="submit" value="Search" />
             <div id="search-error-container"></div>
-        </form>
+        </form:form>
     </div>
 </div>
 
@@ -92,6 +93,7 @@
                 <ul class="breadcrumb">
                     <li><a href="#" title="View all posts in ${sessionScope.post.postCategory}">${sessionScope.post.postCategory}</a> <span class="divider">/</span></li>
                     <li class="active">${sessionScope.post.postName}</li>
+                    <input type="hidden" id="postId" value="${sessionScope.post.postId}">
                 </ul>
 
                 <article class=" type-post format-standard hentry clearfix">
@@ -130,12 +132,14 @@
                     <c:choose>
                         <c:when test="${sessionScope.post.commentAndReplyVos != null}">
                             <c:forEach items="${sessionScope.post.commentAndReplyVos}" var="status" varStatus="s">
-                                <c class="comment even thread-even depth-1" id="li-comment-${s}">
-                                    <article id="comment-${s}">
+                                <input type="hidden" id="trueCommentId${s.count}" value="${status.commentId}">
+                                <li class="comment even thread-even depth-1" id="li-comment-${s.count}">
+                                    <article id="comment-${s.count}">
 
                                         <a href="#">
                                             <img alt="" src="${status.commentUserVo.headAddress}" class="avatar avatar-60 photo" height="60" width="60">
                                         </a>
+
 
                                         <div class="comment-meta">
 
@@ -149,7 +153,13 @@
                                             <p class="date">
                                                 <a href="#">
                                                     <time><fmt:formatDate value="${status.commentCreatetime}" pattern="yyyy-MM-dd HH:mm:ss"/></time>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="commentComment${s.count}" style="color: #0e0e0e">回复</a>
                                                 </a>
+                                                <br>
+                                                <br>
+                                                <input id="commentCommentText${s.count}" type="text" style="height: 50px;width: 800px;display: none">
+                                                <br>
+                                                <input type="submit" id="commentCommentSubmit${s.count}" style="display: none" value="回复">
                                             </p>
 
                                         </div><!-- end .comment-meta -->
@@ -161,44 +171,49 @@
                                     </article>
 
                                     <!-- end of comment -->
-                                    <c:if test="${status.replys != null}">
-                                        <c:forEach items="${status.replys}" var="rstatus" varStatus="rs">
-                                            <ul class="children">
+                                    <ul class="children" id="children${s.count}">
+                                        <c:if test="${status.replys != null}">
+                                            <c:forEach items="${status.replys}" var="rstatus" varStatus="rs">
+                                                <input type="hidden" value="${fn:length(status.replys)}" id="temp${s.count}">
+                                                <input type="hidden" value="${rstatus.replyUser.name}" id="tempName${s.count}">
+                                                <li class="comment byuser comment-author-saqib-sarwar bypostauthor odd alt depth-2" id="li-comment-${s.count}-${rs.count}">
+                                                    <article id="comment-${s.count}-${rs.count}">
+                                                        <a href="#">
+                                                            <img alt="" src="${rstatus.replyUser.headAddress}" class="avatar avatar-60 photo" height="60" width="60">
+                                                        </a>
 
-                                            <li class="comment byuser comment-author-saqib-sarwar bypostauthor odd alt depth-2" id="li-comment-${s}${rs}">
-                                                <article id="comment-${s}${rs}">
+                                                        <div class="comment-meta">
 
-                                                    <%-- User图片 --%>
-                                                    <a href="#">
-                                                        <img alt="" src="${rstatus.replyUser.headAddress}" class="avatar avatar-60 photo" height="60" width="60">
-                                                    </a>
+                                                            <h5 class="author">
+                                                                <cite class="fn">${rstatus.replyUser.name}</cite>
+                                                                - <a class="comment-reply-link" href="#"> 的回复</a><h4 style="text-align: right">${rs.count}楼</h4>
+                                                            </h5>
 
-                                                    <div class="comment-meta">
+                                                            <p class="date">
+                                                                <a href="#">
+                                                                    <time><fmt:formatDate value="${rstatus.replyCreatetime}" pattern="yyyy-MM-dd HH:mm:ss"/></time>
+                                                                </a>
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="replyComment${s.count}-${rs.count}" style="color: #0e0e0e">回复</a>
+                                                                <br>
+                                                                <br>
+                                                                <input id="replyCommentText${s.count}-${rs.count}" type="text" style="height: 50px;width: 800px;display: none">
+                                                                <br>
+                                                                <input type="submit" id="replyCommentSubmit${s.count}-${rs.count}" style="display: none" value="回复">
+                                                            </p>
 
-                                                        <h5 class="author">
-                                                            <cite class="fn">${rstatus.replyUser.name}</cite>
-                                                            - <a class="comment-reply-link" href="#">回复了 ${status.commentUserVo.name}</a>
-                                                        </h5>
+                                                        </div><!-- end .comment-meta -->
 
-                                                        <p class="date">
-                                                            <a href="#">
-                                                                <time><fmt:formatDate value="${rstatus.replyCreatetime}" pattern="yyyy-MM-dd HH:mm:ss"/></time>
-                                                            </a>
-                                                        </p>
+                                                        <div class="comment-body">
+                                                            <p>${rstatus.replyReply}</p>
+                                                        </div><!-- end of comment-body -->
 
-                                                    </div><!-- end .comment-meta -->
+                                                    </article><!-- end of comment -->
 
-                                                    <div class="comment-body">
-                                                        <p>${rstatus.replyReply}</p>
-                                                    </div><!-- end of comment-body -->
-
-                                                </article><!-- end of comment -->
-
-                                            </li>
-                                        </ul>
-                                        </c:forEach>
-                                        <hr>
-                                    </c:if>
+                                                    </li>
+                                            </c:forEach>
+                                            <hr>
+                                        </c:if>
+                                    </ul>
                                 </li>
                             </c:forEach>
                         </c:when>
@@ -214,7 +229,7 @@
                                 <c:choose>
                                     <c:when test="${sessionScope.user != null}">
 
-                                        <form action="#" method="post" id="commentform">
+                                        <div action="#" method="post" id="commentform">
 
 
 
@@ -241,14 +256,14 @@
                                                 <input class="btn" name="submit" type="submit" id="submit"  value="提交评论">
                                             </div>
 
-                                        </form>
+                                        </div>
 
                                     </c:when>
 
                                     <c:otherwise>
                                         <form action="#" method="post" id="commentform">
 
-                                            <p class="comment-notes"><a href="/login-module/login-page"><h3 style="text-align: center">请先登录再进行操作</h3><span class="required"></span></p>
+                                            <p class="comment-notes"><a href="../login-module/login-page"><h3 style="text-align: center">请先登录再进行操作</h3><span class="required"></span></p>
 
                                         </form>
                                     </c:otherwise>
@@ -277,10 +292,10 @@
                         <h3 class="title">Quick Links</h3>
                         <ul id="menu-quick-links" class="menu clearfix">
                             <li><a href="index">主页</a></li>
-                            <li><a href="articles-list.html">文章列表</a></li>
+                            <li><a href="articles-list">文章列表</a></li>
                             <c:if test="${sessionScope.user != null}">
                                 <li><a href="myPost">我的帖子</a></li>
-                                <li><a href="myMessage">我的消息</a></li>
+                                <li><a href="myReply">我的回复</a></li>
                             </c:if>
                         </ul>
                     </div>
@@ -316,6 +331,176 @@
 </body>
 </html>
 <script type="text/javascript">
+    var currentBuildNum = 0;
+    var currentCommentReplyTotal = 0;
+    var currentCommentName = 0;
+    var count = 0;
+    var tempCommentId = 0;
+
+    $("#submit").click(function () {
+        var commentText = document.getElementById("comment").value
+        var postId = document.getElementById("postId").value
+
+        if (commentText == ""){
+            alert("输入内容不能为空")
+            return false
+        }
+        var userId = ${sessionScope.user.id}
+
+        $.ajax({
+            url:'addComment',
+            data:JSON.stringify({"userId":userId,"postId":postId,"commentText":commentText}),
+            type:'POST',
+            contentType:'application/json;charset=utf-8',
+            success:function (data) {
+                if(data){
+                    window.location.reload(false)
+                }
+            },
+            error:function () {
+                alert("系统出错")
+            }
+        })
+        return false
+    })
+
+    $("input[id^='commentCommentSubmit']").click(function () {
+        var id = this.id.substring(20,this.id.length)
+        var text = document.getElementById("commentCommentText" + id).value
+        var postId = document.getElementById("postId").value
+        var trueCommentId = document.getElementById("trueCommentId"+id).value
+        $.ajax({
+            url:'addReplyForComment',
+            data:JSON.stringify({"replyReply":text,"postId":postId,"commentId":trueCommentId}),
+            contentType:'application/json;charset=utf-8',
+            type:'POST',
+            success:function (data) {
+                if(data){
+                    window.location.reload(false)
+                }else{
+                    alert("参数出错")
+                }
+            },
+            error:function () {
+                alert("系统出错")
+            }
+        })
+    })
+
+    $("input[id^='replyCommentSubmit']").click(function () {
+        var id = this.id.substring(18,this.id.length)
+        var text = "<h3 style='color: #33cccc'>回复了" + currentBuildNum + "楼</h3><br><br>"+document.getElementById("replyCommentText"+id).value
+        var postId = document.getElementById("postId").value
+        var commentId = id.split("-")[0]
+        var trueCommentId = document.getElementById("trueCommentId"+commentId).value
+        if(count == 0){
+            tempCommentId = commentId
+        }else{
+            if(tempCommentId != commentId){
+                tempCommentId = commentId
+                count = 0
+            }
+        }
+        if(text){
+            $.ajax({
+                url:'addReplyForComment',
+                type:'POST',
+                data:JSON.stringify({"replyReply":text,"postId":postId,"commentId":trueCommentId}),
+                contentType:'application/json;charset=utf-8',
+                dataType:'json',
+                success:function (data) {
+                    if(data!=null){
+                        var newReplyCreatetime = data['replyCreatetime']
+                        var newReplyId = data['replyId']
+                        var newReplyReply = data['replyReply']
+                        var newHeadAddress = data['replyUser']['headAddress']
+                        var newUserId = data['replyUser']['id']
+                        var newUserName = data['replyUser']['name']
+
+                        if(count == 0){
+                            currentCommentReplyTotal = document.getElementById("temp" + commentId).value
+                            currentCommentName = document.getElementById("tempName" + commentId).value
+                        }else{
+                            currentCommentReplyTotal = currentCommentReplyTotal + 1
+                        }
+                        $("#children"+commentId).append("" +
+                            "<li class='comment byuser comment-author-saqib-sarwar bypostauthor odd alt depth-2' id='li-comment-"+ commentId +"-"+currentCommentReplyTotal+"'>"
+                            +"<article id='comment-"+commentId+"-"+currentCommentReplyTotal+"'>"
+
+                            +"<a href='#'>"
+                                +"<img src='"+newHeadAddress+"' class='avatar avatar-60 photo' height='60' width='60'>"
+                            +"</a>"
+
+                            +"<div class='comment-meta'>"
+
+                            +"<h5 class='author'>"
+                            +"<cite class='fn'>"+newUserName+"</cite>"
+                            +"-"+ "<a class='comment-reply-link' href='#'>的回复</a><h4 style='text-align: right'>"+ (parseInt(currentCommentReplyTotal)+1) +"楼</h4>"
+                            +"</h5>"
+
+                            +"<p class='date'>"
+                            +"<a href='#'>"
+                            +"<time>"+newReplyCreatetime+"</time>"
+                            +"</a>"
+                            +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' id='replyComment"+commentId+"-"+currentCommentReplyTotal+"' style='color: #0e0e0e'>回复</a>"
+                            +"<br>"
+                            +"<br>"
+                            +"<input id='replyCommentText"+commentId+"-"+currentCommentReplyTotal+"' type='text' style='height: 50px;width: 800px;display: none'>"
+                            +"<br>"
+                            +"<input type='submit' id='replyCommentSubmit"+commentId+"-"+currentCommentReplyTotal+"' style='display: none' value='回复'>"
+                            +"</p>"
+
+                            +"</div>"
+
+                            +"<div class='comment-body'>"
+                            +"<p>"+newReplyReply+"</p>"
+                            +"</div>"
+
+                            +"</article>"
+
+                            +"</li>" +
+                            "")
+
+                    }else {
+                        alert("参数错误")
+                    }
+                },
+                error:function () {
+                    alert("您还未登陆")
+                    window.location.href = '../login-module/login-page'
+                }
+            })
+        }else {
+            alert("你还未输入内容")
+            return false
+        }
+    })
+
+    $("a[id^='replyComment']").click(function () {
+        var id = this.id.substring(12,this.id.length)
+        currentBuildNum = this.id.substring(this.id.length-1,this.id.length)
+        if(document.getElementById("replyCommentText"+id).style.display == 'none' && document.getElementById("replyCommentSubmit"+id).style.display == 'none'){
+            document.getElementById("replyCommentText"+id).style.display = ""
+            document.getElementById("replyCommentSubmit"+id).style.display = ""
+        }else{
+            document.getElementById("replyCommentText"+id).style.display = "none"
+            document.getElementById("replyCommentSubmit"+id).style.display = "none"
+        }
+        return false
+    })
+
+    $("a[id^='commentComment']").click(function () {
+        var id = this.id.substring(14,this.id.length)
+        if(document.getElementById("commentCommentText"+id).style.display == 'none' && document.getElementById("commentCommentSubmit"+id).style.display == 'none'){
+            document.getElementById("commentCommentText"+id).style.display = ""
+            document.getElementById("commentCommentSubmit"+id).style.display = ""
+        }else{
+            document.getElementById("commentCommentText"+id).style.display = "none"
+            document.getElementById("commentCommentSubmit"+id).style.display = "none"
+        }
+        return false
+    })
+
     document.getElementById("pc").click(function () {
         var tmp = this.innerHTML
         $.ajax({
@@ -330,4 +515,7 @@
             }
         })
     })
+
+
+
 </script>

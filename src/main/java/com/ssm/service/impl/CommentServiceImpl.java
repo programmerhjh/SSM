@@ -17,4 +17,8 @@ public class CommentServiceImpl implements CommentService {
     @Resource
     private CommentMapper commentMapper;
 
+
+    public void addCommentForPost(int userId, int postId, String commentText) {
+        commentMapper.addCommentForPost(userId,postId,commentText);
+    }
 }

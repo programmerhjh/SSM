@@ -1,6 +1,7 @@
 package com.ssm.model;
 
 import javax.persistence.Table;
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -13,13 +14,13 @@ public class Reply {
 
     private Integer replyId;
 
-    private Date replyCreatetime;
+    private Timestamp replyCreatetime;
 
-    public Date getReplyCreatetime() {
+    public Timestamp getReplyCreatetime() {
         return replyCreatetime;
     }
 
-    public void setReplyCreatetime(Date replyCreatetime) {
+    public void setReplyCreatetime(Timestamp replyCreatetime) {
         this.replyCreatetime = replyCreatetime;
     }
 

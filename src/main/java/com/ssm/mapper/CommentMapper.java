@@ -12,6 +12,11 @@ import tk.mybatis.mapper.common.Mapper;
 @Repository
 public interface CommentMapper extends Mapper<Comment>{
 
+    List<Comment> selectPostComments(Integer postId);
+
+    void addCommentForPost(@Param("userId") int userId,@Param("postId") int postId,@Param("commentText") String commentText);
+
+
     List<CommentAndReplyVo> selectPostComment(Integer postId);
 
     int countByCommentExample(CommentExample example);

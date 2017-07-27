@@ -3,13 +3,18 @@ package com.ssm.service.impl;
 import com.ssm.mapper.CommentMapper;
 import com.ssm.mapper.PostMapper;
 import com.ssm.mapper.ReplyMapper;
+import com.ssm.model.Comment;
 import com.ssm.model.Post;
+import com.ssm.model.PostExample;
+import com.ssm.modelCustom.PostArticleCustom;
 import com.ssm.service.PostService;
 import com.ssm.vo.BBSIndexPostsQueryVo;
 import com.ssm.vo.CommentAndReplyVo;
 import com.ssm.vo.PostSpecificVo;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tool.CreateToken;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -31,16 +36,40 @@ public class PostServiceImpl implements PostService {
     private PostMapper postMapper;
 
 
-    public PostSpecificVo getPostSpecific(Integer postId) {
+    public List<PostArticleCustom> searchPostData(String data,RowBounds rowBounds) {
+        List<PostArticleCustom> list = postMapper.searchPostData(data,rowBounds);
+        for (PostArticleCustom postArticleCustom:list){
+            System.out.println(postArticleCustom);
+            System.out.println("--------------------");
+            postArticleCustom.setComments(commentMapper.selectPostComments(postArticleCustom.getPostId()));
+        }
+        return list;
+    }
 
+    public List<Comment> selectPostComments(Integer postId) {
+        return commentMapper.selectPostComments(postId);
+    }
+
+    public PostSpecificVo getPostSpecific(Integer postId) {
         PostSpecificVo postSpecificVo = postMapper.getPostSpecific(postId);
         List<CommentAndReplyVo> temp = commentMapper.selectPostComment(postId);
         for (CommentAndReplyVo commentAndReplyVo : temp){
             commentAndReplyVo.setReplys(replyMapper.getReplyList(commentAndReplyVo.getCommentId()));
         }
         postSpecificVo.setCommentAndReplyVos(temp);
-
         return postSpecificVo;
+    }
+
+    public List<PostArticleCustom> selectAllPostList(RowBounds rowBounds){
+        List<PostArticleCustom> postList = postMapper.selectAllPostList(rowBounds);
+        for(PostArticleCustom custom: postList){
+            custom.setComments(commentMapper.selectPostComments(custom.getPostId()));
+        }
+        return postList;
+    }
+
+    public List<PostArticleCustom> selectUserPostList(int userId, RowBounds rowBounds) {
+        return postMapper.selectUserPostList(userId,rowBounds);
     }
 
     public List<BBSIndexPostsQueryVo> queryHotPost() {

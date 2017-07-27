@@ -1,8 +1,7 @@
 package com.ssm.service;
 
-import com.ssm.model.Post;
 import com.ssm.model.User;
-import com.ssm.model.UserExpand;
+import com.ssm.modelCustom.UserExpand;
 
 /**
  * Created by acer on 2017/6/24.

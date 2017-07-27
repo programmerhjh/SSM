@@ -2,7 +2,7 @@ package com.ssm.service.impl;
 
 import com.ssm.mapper.UserMapper;
 import com.ssm.model.User;
-import com.ssm.model.UserExpand;
+import com.ssm.modelCustom.UserExpand;
 import com.ssm.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

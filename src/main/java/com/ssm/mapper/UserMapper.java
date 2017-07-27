@@ -1,7 +1,7 @@
 package com.ssm.mapper;
 
 import com.ssm.model.User;
-import com.ssm.model.UserExpand;
+import com.ssm.modelCustom.UserExpand;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
