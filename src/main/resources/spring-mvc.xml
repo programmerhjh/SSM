@@ -44,6 +44,10 @@
             <mvc:mapping path="/bbs-module/*"/>
             <mvc:exclude-mapping path="/bbs-module/article-list"/>
             <mvc:exclude-mapping path="/bbs-module/index"/>
+            <mvc:exclude-mapping path="/bbs-module/search"/>
+            <mvc:exclude-mapping path="/bbs-module/addClickTime"/>
+            <mvc:exclude-mapping path="/bbs-module/articlePage"/>
+            <mvc:exclude-mapping path="/bbs-module/searchPage"/>
             <mvc:exclude-mapping path="/bbs-module/postSpecific"/>
             <mvc:exclude-mapping path="/bbs-module/search.jsp"/>
             <bean class="Interceptors.BBSInterceptor"/>
@@ -54,6 +58,12 @@
             <mvc:exclude-mapping path="/login-module/registered"/>
             <mvc:exclude-mapping path="/login-module/forgot-password"/>
             <mvc:exclude-mapping path="/login-module/checkPhone"/>
+            <mvc:exclude-mapping path="/login-module/validatePhone"/>
+            <mvc:exclude-mapping path="/login-module/checkUsernameIsExist"/>
+            <mvc:exclude-mapping path="/login-module/addNewPassword"/>
+            <mvc:exclude-mapping path="/login-module/registerUser"/>
+            <mvc:exclude-mapping path="/login-module/checkUserIsExist"/>
+            <mvc:exclude-mapping path="/login-module/loginning"/>
             <bean class="Interceptors.LoginInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

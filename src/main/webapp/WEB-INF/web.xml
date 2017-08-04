@@ -8,7 +8,7 @@
           http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
   <welcome-file-list>
-    <welcome-file>bbs-module/index</welcome-file>
+    <welcome-file>index</welcome-file>
   </welcome-file-list>
 
   <display-name>Archetype Created Web Application</display-name>
@@ -89,7 +89,7 @@
   </servlet-mapping>
   <servlet-mapping>
       <servlet-name>SpringMVC</servlet-name>
-      <url-pattern>/bbs-module/index</url-pattern>
+      <url-pattern>/index</url-pattern>
   </servlet-mapping>
 
 

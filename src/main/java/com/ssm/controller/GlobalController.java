@@ -18,4 +18,9 @@ public class GlobalController {
     public String systemError(){
         return "500";
     }
+
+    @RequestMapping("index")
+    public String index(){
+        return "redirect:bbs-module/index";
+    }
 }
