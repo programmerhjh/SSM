@@ -17,7 +17,6 @@
     <mvc:resources location="/WEB-INF/jsp/fonts/" mapping="/fonts/**"/>
     <mvc:resources location="/WEB-INF/jsp/i/" mapping="/i/**"/>
     <mvc:resources location="/WEB-INF/jsp/sass/" mapping="/sass/**"/>
-    <mvc:resources location="/WEB-INF/jsp/ErrorPage/" mapping="/ErrorPage/**"/>
     <!-- 可以直接访问服务器图片资源文件，但不能直接把文件放在WEB-INF下，引用必须使用JSTL的c标签 -->
     <mvc:default-servlet-handler/>
 
