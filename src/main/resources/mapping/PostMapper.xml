@@ -47,7 +47,7 @@
   <resultMap id="postForIndexView" type="com.ssm.vo.BBSIndexPostsQueryVo">
     <id column="post_id" property="postId" jdbcType="INTEGER"/>
     <result column="post_name" jdbcType="VARCHAR" property="postName" />
-    <result column="post_createtime" jdbcType="DATE" property="postCreatetime" />
+    <result column="post_createtime" jdbcType="TIMESTAMP" property="postCreatetime" />
     <result column="post_clicktimes" jdbcType="INTEGER" property="postClicktimes" />
     <result column="post_category" jdbcType="VARCHAR" property="postCategory" />
     <association property="user" javaType="com.ssm.model.User">
@@ -58,7 +58,7 @@
   <resultMap id="BaseResultMap" type="com.ssm.model.Post">
     <id column="post_id" jdbcType="INTEGER" property="postId" />
     <result column="post_name" jdbcType="VARCHAR" property="postName" />
-    <result column="post_createtime" jdbcType="DATE" property="postCreatetime" />
+    <result column="post_createtime" jdbcType="TIMESTAMP" property="postCreatetime" />
     <result column="post_author" jdbcType="INTEGER" property="postAuthor" />
     <result column="post_clicktimes" jdbcType="INTEGER" property="postClicktimes" />
     <result column="post_category" jdbcType="VARCHAR" property="postCategory" />
@@ -151,11 +151,39 @@
       order by ${orderByClause}
     </if>
   </select>
+
   <select id="selectHotArticle" resultMap="postForIndexView">
     select post_id,post_name,post_createtime,post_clicktimes,post_category,name from post p,user u WHERE p.post_author=u.id order by p.post_clicktimes desc limit 6
   </select>
   <select id="selectLastArticle" resultMap="postForIndexView">
     select post_id,post_name,post_createtime,post_clicktimes,post_category,name from post p,user u WHERE p.post_author=u.id order by p.post_id desc limit 6
+  </select>
+
+
+  <delete id="deletePost" parameterType="java.lang.Integer">
+    DELETE FROM post WHERE post_id=#{id}
+  </delete>
+
+
+  <insert id="insertPostList" parameterType="java.util.List">
+    insert into post (post_name,post_author,post_clicktimes,post_category,post_post)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.postName},#{item.postAuthor},#{item.postClicktimes},#{item.postCategory},#{item.postPost})
+    </foreach>
+  </insert>
+
+
+  <delete id="deletePostList">
+    delete from post where post_id in (
+    <foreach collection="list" item="id" separator=",">
+      #{id}
+    </foreach>
+    )
+  </delete>
+
+  <select id="selectPostAndUser" resultMap="PostCustomMap">
+    SELECT * FROM user,post WHERE post_author=id
   </select>
   <select id="selectByPostExample" parameterType="com.ssm.model.PostExample" resultMap="BaseResultMap">
     select

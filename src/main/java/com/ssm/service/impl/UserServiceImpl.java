@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by acer on 2017/6/24.
@@ -20,6 +21,17 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
 
+    public void deleteUserList(List<Integer> list) {
+        userMapper.deleteUserList(list);
+    }
+
+    public void deleteUser(int id) {
+        userMapper.deleteUser(id);
+    }
+
+    public List<User> selectAllUser() {
+        return userMapper.selectAll();
+    }
 
     public UserExpand checkUserExist(String name, String password) {
         return userMapper.checkUserExist(name, password);

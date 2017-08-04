@@ -12,6 +12,7 @@
         <result property="description" column="description"/>
         <result property="age" column="age"/>
         <result property="address" column="address"/>
+        <result property="createtime" column="createtime" jdbcType="TIMESTAMP"/>
 
         <collection property="posts" ofType="com.ssm.model.Post" column="post_author">
             <id column="post_id" jdbcType="INTEGER" property="postId" />
@@ -81,5 +82,19 @@
     <update id="addNewPassword">
         UPDATE user u SET u.password=#{password} WHERE u.name=#{name}
     </update>
+
+    <delete id="deleteUser" parameterType="java.lang.Integer">
+        DELETE FROM user WHERE id=#{id}
+    </delete>
+
+    <delete id="deleteUserList">
+        delete from user where id in (
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+
 
 </mapper>

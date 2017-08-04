@@ -6,11 +6,20 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
+import java.util.List;
+
 /**
  * Created by acer on 2017/6/24.
  */
 @Repository
 public interface UserMapper extends Mapper<User>{
+
+    //删除一个集合中的用户
+    void deleteUserList(List<Integer> list);
+
+    //删除用户
+    void deleteUser(int id);
+
     UserExpand checkUserExist(@Param("name")String name,@Param("password")String password);
     //注册用户
     void registeredUser(@Param("name")String username,@Param("password")String password);

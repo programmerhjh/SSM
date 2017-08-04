@@ -3,6 +3,7 @@ package com.ssm.mapper;
 import com.ssm.model.Post;
 import com.ssm.model.PostExample;
 import com.ssm.modelCustom.PostArticleCustom;
+import com.ssm.modelCustom.PostCustom;
 import com.ssm.vo.BBSIndexPostsQueryVo;
 import com.ssm.vo.PostSpecificVo;
 import org.apache.ibatis.annotations.Param;
@@ -15,6 +16,14 @@ import java.util.List;
 @Repository
 public interface PostMapper extends Mapper<Post> {
 
+    void deletePostList(List<Integer> list);
+
+    void deletePost(int id);
+
+    //用于Excel表对数据库的批量插入
+    void insertPostList(List<Post> list);
+
+    List<PostCustom> selectPostAndUser();
 
     List<PostArticleCustom> selectUserPostList(@Param("userId") int userId,RowBounds rowBounds);
 

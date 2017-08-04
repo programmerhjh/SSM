@@ -57,7 +57,7 @@ public class UserController{
             for (ObjectError objectError : allError){
                 System.out.println(objectError.getDefaultMessage());
             }
-            return "error";
+            return "404";
         }
         userService.updateUserHasCompleteFormation(user);
         session.setAttribute("user",user);

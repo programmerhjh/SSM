@@ -14,6 +14,10 @@
     <mvc:resources location="/WEB-INF/jsp/images/" mapping="/images/**"/>
     <mvc:resources location="/WEB-INF/jsp/js/" mapping="/js/**"/>
     <mvc:resources location="/WEB-INF/jsp/css/" mapping="/css/**"/>
+    <mvc:resources location="/WEB-INF/jsp/fonts/" mapping="/fonts/**"/>
+    <mvc:resources location="/WEB-INF/jsp/i/" mapping="/i/**"/>
+    <mvc:resources location="/WEB-INF/jsp/sass/" mapping="/sass/**"/>
+    <mvc:resources location="/WEB-INF/jsp/ErrorPage/" mapping="/ErrorPage/**"/>
     <!-- 可以直接访问服务器图片资源文件，但不能直接把文件放在WEB-INF下，引用必须使用JSTL的c标签 -->
     <mvc:default-servlet-handler/>
 
@@ -29,6 +33,31 @@
         以上都在使用了annotation-driven后自动注册。
      -->
     <mvc:annotation-driven/>
+    
+    
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/admin-module/*"/>
+            <mvc:exclude-mapping path="/admin-module/adminLogin"/>
+            <bean class="Interceptors.AdminInterceptor"></bean>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/bbs-module/*"/>
+            <mvc:exclude-mapping path="/bbs-module/article-list"/>
+            <mvc:exclude-mapping path="/bbs-module/index"/>
+            <mvc:exclude-mapping path="/bbs-module/postSpecific"/>
+            <mvc:exclude-mapping path="/bbs-module/search.jsp"/>
+            <bean class="Interceptors.BBSInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/login-module/*"/>
+            <mvc:exclude-mapping path="/login-module/login-page"/>
+            <mvc:exclude-mapping path="/login-module/registered"/>
+            <mvc:exclude-mapping path="/login-module/forgot-password"/>
+            <mvc:exclude-mapping path="/login-module/checkPhone"/>
+            <bean class="Interceptors.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
     <!--避免IE执行AJAX时，返回JSON出现下载文件 -->
     <bean id="mappingJacksonHttpMessageConverter"
           class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">

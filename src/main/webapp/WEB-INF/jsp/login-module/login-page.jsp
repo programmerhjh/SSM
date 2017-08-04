@@ -105,7 +105,7 @@
                             window.location.href = "../bbs-module/index";
                         }
                     }else if(data['paramError'] == 1){
-				        window.location.href = "redirect:error.jsp";
+				        window.location.href = "redirect:500";
                     }else if(data['loginError']){
                         alert("登陆异常..请稍后再试 : " + data['loginError']);
                     }else {

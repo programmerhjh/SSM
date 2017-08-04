@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -32,6 +33,15 @@ public class User {
     private String description;
     private Integer age;
     private String address;
+    private Timestamp createtime;
+
+    public Timestamp getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(Timestamp createtime) {
+        this.createtime = createtime;
+    }
 
     public String getPhone() {
         return phone;
@@ -117,6 +127,7 @@ public class User {
                 ", description='" + description + '\'' +
                 ", age=" + age +
                 ", address='" + address + '\'' +
+                ", createTime=" + createtime +
                 '}';
     }
 }

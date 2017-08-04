@@ -7,10 +7,11 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
           http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
-  <display-name>Archetype Created Web Application</display-name>
   <welcome-file-list>
-    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>bbs-module/index</welcome-file>
   </welcome-file-list>
+
+  <display-name>Archetype Created Web Application</display-name>
   <!--
       防止jndi （DEBUG级别）的报错
    -->
@@ -86,6 +87,10 @@
     <!-- 此处也可以配置成 *.do 形式 -->
     <url-pattern>/</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+      <servlet-name>SpringMVC</servlet-name>
+      <url-pattern>/bbs-module/index</url-pattern>
+  </servlet-mapping>
 
 
   <!-- session配置 -->
@@ -93,5 +98,16 @@
     <!--分钟为单位-->
     <session-timeout>15</session-timeout>
   </session-config>
+
+  <error-page>
+    <error-code>500</error-code>
+    <location>/500</location>
+  </error-page>
+
+  <error-page>
+    <error-code>404</error-code>
+    <location>/404</location>
+  </error-page>
+
 
 </web-app>

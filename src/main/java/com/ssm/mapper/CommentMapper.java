@@ -4,6 +4,7 @@ import com.ssm.model.Comment;
 import com.ssm.model.CommentExample;
 import java.util.List;
 
+import com.ssm.modelCustom.CommentCustom;
 import com.ssm.vo.CommentAndReplyVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,12 @@ import tk.mybatis.mapper.common.Mapper;
 
 @Repository
 public interface CommentMapper extends Mapper<Comment>{
+
+    void deleteCommentList(List<Integer> list);
+
+    void deleteComment(int id);
+
+    List<CommentCustom> selectCommentAndPostAndUser();
 
     List<Comment> selectPostComments(Integer postId);
 

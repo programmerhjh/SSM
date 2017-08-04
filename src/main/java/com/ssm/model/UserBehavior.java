@@ -4,23 +4,14 @@ package com.ssm.model;
  * 用户行为实体类
  * Created by acer on 2017/7/10.
  */
-public class UserBehavior {
+public class UserBehavior extends User{
     private int id;
     private int userHasCompleteFormation;
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    private User user;
 
     public void setId(int id) {
         this.id = id;
     }
+
 
 
     public int getUserHasCompleteFormation() {

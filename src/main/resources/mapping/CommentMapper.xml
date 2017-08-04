@@ -112,9 +112,33 @@
     comment_comment
   </sql>
 
+  <select id="selectCommentAndPostAndUser" resultMap="CommentCustomMap">
+      SELECT
+          *
+      FROM
+          comment
+              LEFT OUTER JOIN
+          user ON id = comment_user
+              LEFT OUTER JOIN
+          post ON post_id = comment_post
+  </select>
+
   <select id="selectPostComments" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
     select distinct * from comment c where c.comment_post=#{postId}
   </select>
+
+  <delete id="deleteComment" parameterType="java.lang.Integer">
+    DELETE FROM comment WHERE comment_id=#{id}
+  </delete>
+
+  <delete id="deleteCommentList">
+    delete from comment where comment_id in (
+    <foreach collection="list" item="id" separator=",">
+      #{id}
+    </foreach>
+    )
+  </delete>
+
 
   <select id="selectByCommentExampleWithBLOBs" parameterType="com.ssm.model.CommentExample" resultMap="ResultMapWithBLOBs">
     select

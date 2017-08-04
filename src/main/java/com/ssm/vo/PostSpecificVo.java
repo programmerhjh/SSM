@@ -14,6 +14,12 @@ public class PostSpecificVo extends Post {
 
     private List<CommentAndReplyVo> commentAndReplyVos;
 
+    public PostSpecificVo(){}
+
+    public PostSpecificVo(String postName, Integer postAuthor, Integer postClicktimes, String postCategory,String postPost) {
+        super(postName, postAuthor, postClicktimes, postCategory,postPost);
+    }
+
     public UserExpand getUser() {
         return user;
     }

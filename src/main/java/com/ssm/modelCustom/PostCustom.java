@@ -13,6 +13,12 @@ public class PostCustom extends Post {
     private User user;
     private List<Comment> comments;
 
+    public PostCustom(){}
+
+    public PostCustom(String postName, Integer postAuthor, Integer postClicktimes, String postCategory,String postPost) {
+        super(postName, postAuthor, postClicktimes, postCategory,postPost);
+    }
+
     public User getUser() {
         return user;
     }

@@ -5,8 +5,8 @@ import com.ssm.mapper.PostMapper;
 import com.ssm.mapper.ReplyMapper;
 import com.ssm.model.Comment;
 import com.ssm.model.Post;
-import com.ssm.model.PostExample;
 import com.ssm.modelCustom.PostArticleCustom;
+import com.ssm.modelCustom.PostCustom;
 import com.ssm.service.PostService;
 import com.ssm.vo.BBSIndexPostsQueryVo;
 import com.ssm.vo.CommentAndReplyVo;
@@ -14,7 +14,6 @@ import com.ssm.vo.PostSpecificVo;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tool.CreateToken;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -36,7 +35,27 @@ public class PostServiceImpl implements PostService {
     private PostMapper postMapper;
 
 
-    public List<PostArticleCustom> searchPostData(String data,RowBounds rowBounds) {
+    public void deletePostList(List<Integer> list) {
+        postMapper.deletePostList(list);
+    }
+
+    public void deletePost(int id) {
+        postMapper.deletePost(id);
+    }
+
+    public void insertPostList(List<Post> list) {
+        postMapper.insertPostList(list);
+    }
+
+    public List<Post> getAllPost() {
+        return postMapper.selectAll();
+    }
+
+    public List<PostCustom> selectPostAndUser() {
+        return postMapper.selectPostAndUser();
+    }
+
+    public List<PostArticleCustom> searchPostData(String data, RowBounds rowBounds) {
         List<PostArticleCustom> list = postMapper.searchPostData(data,rowBounds);
         for (PostArticleCustom postArticleCustom:list){
             System.out.println(postArticleCustom);

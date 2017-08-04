@@ -10,6 +10,12 @@ import java.util.List;
  */
 public class PostArticleCustom extends Post{
 
+    public PostArticleCustom(){}
+
+    public PostArticleCustom(String postName, Integer postAuthor, Integer postClicktimes, String postCategory,String postPost) {
+        super(postName, postAuthor, postClicktimes, postCategory,postPost);
+    }
+
     @Override
     public String toString() {
         return "PostArticleCustom{" +

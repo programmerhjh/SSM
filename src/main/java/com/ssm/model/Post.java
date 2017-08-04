@@ -22,6 +22,16 @@ public class Post {
 
     private String postPost;
 
+    public Post(){}
+
+    public Post(String postName, Integer postAuthor, Integer postClicktimes, String postCategory,String postPost) {
+        this.postName = postName;
+        this.postAuthor = postAuthor;
+        this.postClicktimes = postClicktimes;
+        this.postCategory = postCategory;
+        this.postPost = postPost;
+    }
+
     public Integer getPostId() {
         return postId;
     }

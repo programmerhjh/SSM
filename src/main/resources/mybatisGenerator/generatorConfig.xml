@@ -49,7 +49,6 @@
         </javaClientGenerator>
 
         <!-- 指定数据库表，要生成哪些表，就写哪些表，要和数据库中对应，不能写错！ -->
-        <table tableName="post"></table>
-        <table tableName="comment"></table>
+        <table tableName="admin"></table>
     </context>
 </generatorConfiguration>

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import tool.GetPropertyUtil;
 import tool.JsonToMap;
 import tool.PageTool;
 
@@ -208,7 +209,7 @@ public class BBSController {
                 MultipartFile file = multipartHttpServletRequest.getFile(iterator.next());
                 String newFileSuffix = "." + file.getContentType().substring(file.getContentType().indexOf("/") + 1);
                 String fileName = UUID.randomUUID() + new SimpleDateFormat("yyyy-MM-dd", Locale.CHINESE).format(new Date()).toString() + file.getOriginalFilename().hashCode();// 文件名称
-                String localPath = "F:/upload/"+ fileName + newFileSuffix;
+                String localPath = GetPropertyUtil.getFileAddress("Pic")+ fileName + newFileSuffix;
                 File newFile = new File(localPath);
                 file.transferTo(newFile);
                 if(count == 0)

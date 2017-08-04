@@ -11,6 +11,12 @@ public class BBSIndexPostsQueryVo extends Post{
 
     private Post post;
 
+    public BBSIndexPostsQueryVo(){}
+
+    public BBSIndexPostsQueryVo(String postName, Integer postAuthor, Integer postClicktimes, String postCategory,String postPost) {
+        super(postName, postAuthor, postClicktimes, postCategory,postPost);
+    }
+
     public Post getPost() {
         return post;
     }
