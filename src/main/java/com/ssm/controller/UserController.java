@@ -64,7 +64,6 @@ public class UserController{
         log.info("添加个人信息成功");
         return "bbs-module/index";
     }
-
     /**
      * 完善个人资料页面
      * @return
