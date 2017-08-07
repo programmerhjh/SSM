@@ -92,9 +92,8 @@
             <h2 style="text-align: center">搜索结果：</h2>
             <!-- start of page content -->
             <div class="span8 main-listing" id="list">
-
                 <c:choose>
-                    <c:when test="${requestScope.page.list == null}">
+                    <c:when test="${fn:length(requestScope.page.list) == 0}">
                         <h2>搜索结果为空</h2>
                     </c:when>
                     <c:otherwise>
@@ -105,19 +104,19 @@
                                 <header class="clearfix">
 
                                     <h3 class="post-title">
-                                        <a href="postSpecific?postId=${status.postId}">${status.postName}</a>
+                                        <a href="postSpecific?postId=${status.postId}">${status['postName']}</a>
                                     </h3>
 
                                     <div class="post-meta clearfix">
-                                        <span class="date"><fmt:formatDate value="${status.postCreatetime}"/></span>
-                                        <span class="category"><a href="#" title="${status.postCategory}">${status.postCategory}</a></span>
-                                        <span class="comments"><a href="#" title="Comment on ${status.postName}">${fn:length(status.comments)} Comments</a></span>
-                                        <span class="like-count">${status.postClicktimes}</span>
+                                        <span class="date"><fmt:formatDate value="${status['postCreatetime']}"/></span>
+                                        <span class="category"><a href="#" title="${status.postCategory}">${status['postCategory']}</a></span>
+                                        <span class="comments"><a href="#" title="Comment on ${status.postName}">${fn:length(status['comments'])} Comments</a></span>
+                                        <span class="like-count">${status['postClicktimes']}</span>
                                     </div><!-- end of post meta -->
 
                                 </header>
 
-                                <p>${fn:substring(status.postPost, 0, fn:length(status.postPost)-fn:length(status.postPost)/2)} . . . <a class="readmore-link" href="postSpecific?postId=${status.postId}">Read more</a></p>
+                                <p>${fn:substring(status['postPost'], 0, fn:length(status['postPost'])-fn:length(status['postPost'])/2)} . . . <a class="readmore-link" href="postSpecific?postId=${status['postId']}">Read more</a></p>
 
                             </article>
 
@@ -241,7 +240,7 @@
 
                     }
 
-                    })
+                })
 
 
                 list2.forEach(function (e) {

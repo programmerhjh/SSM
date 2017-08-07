@@ -1,6 +1,7 @@
 package tool;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,17 +16,21 @@ public class FileTool {
      */
 
 
-    public static void getFiles(){
+    public static void getFiles() throws IOException {
+        String encoding = System.getProperty("file.encoding");
         fileList.clear();
         fileSizeList.clear();
         fileTimeList.clear();
-        String filePath = "F://upload//uploadFiles";
+        String filePath = GetPropertyUtil.getFileAddress("Files");
         File root = new File(filePath);
         File[] files = root.listFiles();
         for(File file:files){
+            System.out.println(encoding);
             fileSizeList.add(file.length());
             fileTimeList.add(simpleDateFormat.format(new Date(file.lastModified())));
-            fileList.add(file.getName());
+            fileList.add(new String(file.getName().getBytes(encoding),"UTF-8"));
+            System.out.println(new String(file.getName().getBytes(encoding),"UTF-8"));
+            System.out.println("----------------------------");
         }
     }
 }

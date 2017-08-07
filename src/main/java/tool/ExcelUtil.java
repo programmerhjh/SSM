@@ -56,7 +56,7 @@ public class ExcelUtil {
 			WritableWorkbook wwb;
 			UUIDkey = String.valueOf(UUID.randomUUID());
 			// 创建可写入的Excel工作簿
-			String fileName = "F:/upload/listToExcels/"+ UUIDkey+".xls";
+			String fileName = GetPropertyUtil.getFileAddress("Excel")+ UUIDkey+".xls";
 			File file=new File(fileName);
 			if (!file.exists()) {
 				file.createNewFile();

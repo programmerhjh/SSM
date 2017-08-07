@@ -18,9 +18,7 @@ public class PostArticleCustom extends Post{
 
     @Override
     public String toString() {
-        return "PostArticleCustom{" +
-                "comment=" + comments +
-                '}';
+        return super.toString();
     }
 
     private List<Comment> comments;

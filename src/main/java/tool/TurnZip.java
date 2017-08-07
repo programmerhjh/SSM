@@ -30,10 +30,12 @@ public class TurnZip {
         String storeName = mFile.getOriginalFilename();
         String noZipName = GetPropertyUtil.getFileAddress("Files")+ storeName;
         String zipName = zipName(noZipName);
+        ZipEntry zipEntry = new ZipEntry(storeName);
+        zipEntry.setUnixMode(644);
         ZipOutputStream outputStream = new ZipOutputStream(
                 new BufferedOutputStream(new FileOutputStream(zipName)));
-        outputStream.putNextEntry(new ZipEntry(storeName));
-        outputStream.setEncoding("GBK");
+        outputStream.putNextEntry(zipEntry);
+        outputStream.setEncoding("utf-8");
 
         FileCopyUtils.copy(mFile.getInputStream(), outputStream);
     }

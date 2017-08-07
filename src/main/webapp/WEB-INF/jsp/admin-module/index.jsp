@@ -22,7 +22,7 @@
     <script src="../js/echarts.min.js"></script>
 </head>
 
-<body data-type="index">
+<body data-type="index" id="body">
 
     <header class="am-topbar am-topbar-inverse admin-header">
         <div class="am-topbar-brand">
@@ -304,6 +304,67 @@
 
                                             </style>
                                         </div>
+                                        <div class="div1">
+
+                                            <div class="div2">导出数据库帖子数据</div>
+
+                                            <input type="button" class="inputstyle" id="downloadPostExcel" onclick="return downloadPostExcel()">
+
+                                            <style>
+                                                .div1{
+
+                                                    float: right;
+
+                                                    height: 50px;
+
+                                                    background: #f5696c;
+
+                                                    width: 50px;
+
+                                                    position:relative;
+
+                                                }
+
+                                                .div2{
+
+                                                    text-align:right;
+
+                                                    padding-top:12px;
+
+                                                    font-size:15px;
+
+                                                    font-weight:100
+
+                                                }
+
+                                                .inputstyle{
+
+                                                    width: 50px;
+
+                                                    height: 41px;
+
+                                                    cursor: pointer;
+
+                                                    font-size: 20px;
+
+                                                    outline: medium none;
+
+                                                    position: absolute;
+
+                                                    filter:alpha(opacity=0);
+
+                                                    -moz-opacity:0;
+
+                                                    opacity:0;
+
+                                                    left:0px;
+
+                                                    top: 0px;
+
+                                                }
+
+                                            </style>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -488,12 +549,14 @@
             data:JSON.stringify({"data":temp.toString()}),
             type:'POST',
             contentType:'application/json;charset=utf-8',
-            success:function () {
-                tempHtmlId.forEach(function (value,index,array) {
-                    var current = document.getElementById("user"+value)
-                    current.remove()
-                })
-                document.getElementById("userManageButton").click
+            success:function (data) {
+                if(data){
+                    tempHtmlId.forEach(function (value,index,array) {
+                        var current = document.getElementById("user"+value)
+                        current.remove()
+                    })
+                    document.getElementById("userManageButton").click
+                }
 
             }
         })
@@ -517,12 +580,14 @@
             data:JSON.stringify({"data":temp.toString()}),
             type:'POST',
             contentType:'application/json;charset=utf-8',
-            success:function () {
-                tempHtmlId.forEach(function (value,index,array) {
-                    var current = document.getElementById("post"+value)
-                    current.remove()
-                })
-                document.getElementById("postManageButton").click
+            success:function (data) {
+                if(data){
+                    tempHtmlId.forEach(function (value,index,array) {
+                        var current = document.getElementById("post"+value)
+                        current.remove()
+                    })
+                    document.getElementById("postManageButton").click
+                }
             }
         })
     })
@@ -545,12 +610,14 @@
             data:JSON.stringify({"data":temp.toString()}),
             type:'POST',
             contentType:'application/json;charset=utf-8',
-            success:function () {
-                tempHtmlId.forEach(function (value,index,array) {
-                    var current = document.getElementById("comment"+value)
-                    current.remove()
-                })
-                document.getElementById("commentManageButton").click
+            success:function (data) {
+                if(data){
+                    tempHtmlId.forEach(function (value,index,array) {
+                        var current = document.getElementById("comment"+value)
+                        current.remove()
+                    })
+                    document.getElementById("commentManageButton").click
+                }
             }
         })
     })
@@ -824,10 +891,8 @@
                         "<td>"+
                         "<div class='am-btn-toolbar'>"+
                         "<div class='am-btn-group am-btn-group-xs'>"+
-                        "<button class='am-btn am-btn-primary am-btn-xs am-text-warning am-hide-sm-only' id='downFile"+index+"' onclick='" +
-                        "var DownloadId = this.id;return downloadFile(DownloadId); " +
-                        "'>"
-                        +"<span class='am-icon-arrow-circle-o-down'>"+"</span>下载</button>"+
+                        "<button class='am-btn am-btn-primary am-btn-xs am-text-warning am-hide-sm-only' id='downFile"+index+"' onclick='return downloadFile(this.id);'>"
+                        +"<span class='am-icon-arrow-circle-o-down'><a id='pageFile"+index+"' href='http://39.108.68.200:8088/uploadFiles/"+value+"'/> "+"</span>下载</button>"+
                         "<button class='am-btn am-btn-primary am-btn-xs am-text-danger am-hide-sm-only' id='removeFile"+index+"' onclick='" +
                         "var RemoveId = this.id;return removeFile(RemoveId); " +
                         "'>"
@@ -1030,9 +1095,11 @@
             data:JSON.stringify({"id":id}),
             type:'POST',
             contentType:'application/json;charset=utf-8',
-            success:function () {
-                var current = document.getElementById("user"+htmlId)
-                current.remove()
+            success:function (data) {
+                if(data){
+                    var current = document.getElementById("user"+htmlId)
+                    current.remove()
+                }
             },
             error:function () {
                 alert("删除失败")
@@ -1042,7 +1109,7 @@
         return false
     })
 
-    $("button[id^='deletePost']").live('click',function deleteUser() {
+    $("button[id^='deletePost']").live('click',function deletePost() {
         var htmlId = this.id.substring(10,this.id.length)
         var id = document.getElementById("postId"+htmlId).value
         $.ajax({
@@ -1050,9 +1117,11 @@
             data:JSON.stringify({"id":id}),
             type:'POST',
             contentType:'application/json;charset=utf-8',
-            success:function () {
-                var current = document.getElementById("post"+htmlId)
-                current.remove()
+            success:function (data) {
+                if(data){
+                    var current = document.getElementById("post"+htmlId)
+                    current.remove()
+                }
             },
             error:function () {
                 alert("删除失败")
@@ -1062,7 +1131,7 @@
         return false
     })
 
-    $("button[id^='deleteComment']").live('click',function deleteUser() {
+    $("button[id^='deleteComment']").live('click',function deleteComment() {
         var htmlId = this.id.substring(13,this.id.length)
         var id = document.getElementById("commentId"+htmlId).value
         $.ajax({
@@ -1070,9 +1139,11 @@
             data:JSON.stringify({"id":id}),
             type:'POST',
             contentType:'application/json;charset=utf-8',
-            success:function () {
-                var current = document.getElementById("comment"+htmlId)
-                current.remove()
+            success:function (data) {
+                if(data){
+                    var current = document.getElementById("comment"+htmlId)
+                    current.remove()
+                }
             },
             error:function () {
                 alert("删除失败")
@@ -1107,10 +1178,8 @@
                         "<td>"+
                         "<div class='am-btn-toolbar'>"+
                         "<div class='am-btn-group am-btn-group-xs'>"+
-                        "<button class='am-btn am-btn-primary am-btn-xs am-text-warning am-hide-sm-only' id='downFile"+index+"' onclick='" +
-                        "var DownloadId = this.id;return downloadFile(DownloadId); " +
-                        "'>"
-                        +"<span class='am-icon-arrow-circle-o-down'>"+"</span>下载</button>"+
+                        "<button class='am-btn am-btn-primary am-btn-xs am-text-warning am-hide-sm-only' id='downFile"+index+"' onclick='return downloadFile(this.id);'>"
+                        +"<span class='am-icon-arrow-circle-o-down'><a id='pageFile"+index+"' href='http://39.108.68.200:8088/uploadFiles/"+value+"'/> "+"</span>下载</button>"+
                         "<button class='am-btn am-btn-primary am-btn-xs am-text-danger am-hide-sm-only' id='removeFile"+index+"' onclick='" +
                         "var RemoveId = this.id;return removeFile(RemoveId); " +
                         "'>"
@@ -1141,12 +1210,33 @@
         })
     });
 
+    function downloadPostExcel() {
+        $.ajax({
+            url:'downloadExcelFile',
+            data:{},
+            type:'POST',
+            contentType:'application/json;charset=utf-8',
+            success:function (data) {
+                $("#body").append(
+                    "<a href='"+data+"' id='excelFile'/>"
+                )
+                $("#excelFile")[0].click();
+                $("#excelFile").remove();
+            }
+        })
+
+        return false;
+    }
+
     function downloadFile(downFileId) {
         var id = downFileId.substring(8,downFileId.length)
-        var fileName = document.getElementById("fileName"+id).innerHTML
-        window.location.href = '../../img/uploadFiles/'+fileName
+        $("#body").append(
+            "<a href='"+$("#pageFile"+id)[0]+"' id='pageClickFile'/>"
+        )
+        $("#pageClickFile")[0].click();
+        $("#pageClickFile").remove();
         return false
-    };
+    }
 
     function removeFile(removeFileId) {
         var removeId = removeFileId.substring(10,removeFileId.length)

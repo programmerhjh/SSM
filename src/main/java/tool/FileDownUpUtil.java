@@ -3,6 +3,7 @@ package tool;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.UUID;
 
 /**
  * Created by acer on 2017/7/30.
@@ -36,6 +37,7 @@ public class FileDownUpUtil {
         bis.close();
         bos.close();
     }
+
 
     public static boolean deleteFile(String fileName) throws IOException {
         boolean flag = true;

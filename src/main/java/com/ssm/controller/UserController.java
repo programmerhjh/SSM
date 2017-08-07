@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import tool.EncoderByMD5;
+import tool.GetPropertyUtil;
 import tool.JsonToMap;
 
 import javax.annotation.Resource;
@@ -57,12 +58,12 @@ public class UserController{
             for (ObjectError objectError : allError){
                 System.out.println(objectError.getDefaultMessage());
             }
-            return "404";
+            return "redirect:../404";
         }
         userService.updateUserHasCompleteFormation(user);
         session.setAttribute("user",user);
         log.info("添加个人信息成功");
-        return "bbs-module/index";
+        return "redirect:../bbs-module/index";
     }
     /**
      * 完善个人资料页面
@@ -93,10 +94,10 @@ public class UserController{
                 MultipartFile file = multipartHttpServletRequest.getFile(iterator.next());
                 String newFileSuffix = "." + file.getContentType().substring(file.getContentType().indexOf("/") + 1);
                 String fileName = UUID.randomUUID() + new SimpleDateFormat("yyyy-MM-dd", Locale.CHINESE).format(new Date()).toString() + file.getOriginalFilename().hashCode();// 文件名称
-                String localPath = "F:/upload/"+ fileName + newFileSuffix;
+                String localPath = GetPropertyUtil.getFileAddress("Pic") + fileName + newFileSuffix;
                 File newFile = new File(localPath);
                 file.transferTo(newFile);
-                resultParam = "http://localhost:8080/img/" + fileName + newFileSuffix;
+                resultParam = "http://39.108.68.200:8088/images/" + fileName + newFileSuffix;
             }
         }
         response.setContentType("text/html;charset=utf-8");

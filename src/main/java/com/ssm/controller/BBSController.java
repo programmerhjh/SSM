@@ -33,10 +33,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -60,8 +57,12 @@ public class BBSController {
     private ReplyService replyService;
 
     @RequestMapping("search")
-    public String search(@RequestBody(required = false) String pageData,HttpServletRequest request, HttpServletResponse response){
+    public String search(@RequestBody(required = false) String pageData,HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        request.setCharacterEncoding("utf-8");
         String data = request.getParameter("search");
+        byte source [] = data.getBytes("iso8859-1");
+        data = new String (source,"UTF-8");
+        System.out.println(data);
         List<PostArticleCustom> list;
         if(data!=null){
             list = postService.searchPostData(data,PageTool.device(pageData));
@@ -70,6 +71,7 @@ public class BBSController {
         }
         Page pageTemp = (Page) list;
         PageInfo<PostArticleCustom> page = new PageInfo<PostArticleCustom>(list,pageTemp.getPages());
+        request.removeAttribute("page");
         request.setAttribute("page",page);
 
         return "bbs-module/search";
@@ -213,9 +215,9 @@ public class BBSController {
                 File newFile = new File(localPath);
                 file.transferTo(newFile);
                 if(count == 0)
-                    resultParam += "\"" + ("http://localhost:8080/img/" + fileName + newFileSuffix).replaceAll("\\\\","/")  + "\"";
+                    resultParam += "\"" + ("http://39.108.68.200:8088/images/" + fileName + newFileSuffix).replaceAll("\\\\","/")  + "\"";
                 else
-                    resultParam += "," + "\"" + ("http://localhost:8080/img/" + fileName + newFileSuffix).replaceAll("\\\\","/") + "\"";
+                    resultParam += "," + "\"" + ("http://39.108.68.200:8088/images/" + fileName + newFileSuffix).replaceAll("\\\\","/") + "\"";
                 count++;
             }
         }

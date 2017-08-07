@@ -82,7 +82,7 @@ public class adminController {
         if(admin != null){
             request.getSession().setAttribute("admin",admin);
             log.info("后台管理首页");
-            return "admin-module/index";
+            return "redirect:../admin-module/index";
         }
         return "admin-module/adminLogin";
     }
@@ -239,11 +239,15 @@ public class adminController {
         }
 
         List[] lists = new List[]{listName, listTime,listSize};
+        for (String  s: listName){
+            System.out.println(s.toString());
+        }
         map.put("data",lists);
         map.put("pages",unDataBasePageTool1.getMaxPage());
         JSONObject jsonObject = new JSONObject(map);
         String result = jsonObject.toJSONString(map,SerializerFeature.WriteDateUseDateFormat);
         System.out.println(result);
+
         response.setContentType("text/plain; charset=utf-8");
         Writer writer = response.getWriter();
         writer.write(result);
@@ -255,8 +259,11 @@ public class adminController {
     public void downloadFile(HttpServletRequest request ,HttpServletResponse response,@RequestBody String data) throws Exception {
         Map map = JsonToMap.toHashMap(data);
         String fileName = map.get("fileName").toString();
-        String ctxPath = GetPropertyUtil.getFileAddress("Files");
-        FileDownUpUtil.downloadFile(request,response,fileName,fileName,ctxPath);
+        String ctxPath = "http://39.108.68.200:8088" + GetPropertyUtil.getFileAddress("FilesDownload") + fileName;
+        Writer writer = response.getWriter();
+        writer.write(ctxPath);
+        writer.flush();
+        writer.close();
     }
 
     @RequestMapping("removeFile")
@@ -300,8 +307,11 @@ public class adminController {
     @RequestMapping("downloadExcelFile")
     public void downloadExcelFile(HttpServletRequest request,HttpServletResponse response) throws Exception {
         String key = ExcelUtil.listToExcel(postService.getAllPost());
-        String ctxPath = GetPropertyUtil.getFileAddress("Excel");
-        FileDownUpUtil.downloadFile(request,response,key,key,ctxPath);
+        String ctxPath = "http://39.108.68.200:8088"+GetPropertyUtil.getFileAddress("ExcelDownload") + key;
+        Writer writer = response.getWriter();
+        writer.write(ctxPath);
+        writer.flush();
+        writer.close();
     }
 
     @RequestMapping("uploadExcel")
@@ -333,25 +343,37 @@ public class adminController {
     }
 
     @RequestMapping("deleteUser")
-    public void deleteUser(@RequestBody String data){
+    public void deleteUser(@RequestBody String data,HttpServletResponse response) throws IOException {
         Integer id = Integer.parseInt(JsonToMap.toHashMap(data).get("id").toString());
         userService.deleteUser(id);
+        Writer out = response.getWriter();
+        out.write("success");
+        out.flush();
+        out.close();
     }
 
     @RequestMapping("deletePost")
-    public void deletePost(@RequestBody String data){
+    public void deletePost(@RequestBody String data,HttpServletResponse response) throws IOException {
         Integer id = Integer.parseInt(JsonToMap.toHashMap(data).get("id").toString());
         postService.deletePost(id);
+        Writer out = response.getWriter();
+        out.write("success");
+        out.flush();
+        out.close();
     }
 
     @RequestMapping("deleteComment")
-    public void deleteComment(@RequestBody String data){
+    public void deleteComment(@RequestBody String data,HttpServletResponse response) throws IOException {
         Integer id = Integer.parseInt(JsonToMap.toHashMap(data).get("id").toString());
         commentService.deleteComment(id);
+        Writer out = response.getWriter();
+        out.write("success");
+        out.flush();
+        out.close();
     }
 
     @RequestMapping("deleteAllUser")
-    public void deleteAllUser(@RequestBody String data){
+    public void deleteAllUser(@RequestBody String data,HttpServletResponse response) throws IOException {
         String temp = JsonToMap.toHashMap(data).get("data").toString();
         String[] allId = temp.split(",");
         List<Integer> list = null;
@@ -359,10 +381,14 @@ public class adminController {
             list.add(Integer.parseInt(s));
         }
         userService.deleteUserList(list);
+        Writer out = response.getWriter();
+        out.write("success");
+        out.flush();
+        out.close();
     }
 
     @RequestMapping("deleteAllPost")
-    public void deleteAllPost(@RequestBody String data){
+    public void deleteAllPost(@RequestBody String data,HttpServletResponse response) throws IOException {
         String temp = JsonToMap.toHashMap(data).get("data").toString();
         String[] allId = temp.split(",");
         List<Integer> list = null;
@@ -370,10 +396,14 @@ public class adminController {
             list.add(Integer.parseInt(s));
         }
         postService.deletePostList(list);
+        Writer out = response.getWriter();
+        out.write("success");
+        out.flush();
+        out.close();
     }
 
     @RequestMapping("deleteAllComment")
-    public void deleteAllComment(@RequestBody String data){
+    public void deleteAllComment(@RequestBody String data,HttpServletResponse response) throws IOException {
         String temp = JsonToMap.toHashMap(data).get("data").toString();
         String[] allId = temp.split(",");
         List<Integer> list = null;
@@ -381,5 +411,9 @@ public class adminController {
             list.add(Integer.parseInt(s));
         }
         commentService.deleteCommentList(list);
+        Writer out = response.getWriter();
+        out.write("success");
+        out.flush();
+        out.close();
     }
 }

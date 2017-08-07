@@ -5,11 +5,11 @@
 
 @font-face {
     font-family: 'SingleSleeveRegular';
-    src: url('../font/sing-webfont.eot');
-    src: url('../font/sing-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../font/sing-webfont.woff') format('woff'),
-         url('../font/sing-webfont.ttf') format('truetype'),
-         url('../font/sing-webfont.svg#SingleSleeveRegular') format('svg');
+    src: url('../fonts/sing-webfont.eot');
+    src: url('../fonts/sing-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/sing-webfont.woff') format('woff'),
+         url('../fonts/sing-webfont.ttf') format('truetype'),
+         url('../fonts/sing-webfont.svg#SingleSleeveRegular') format('svg');
     font-weight: normal;
     font-style: normal;
 
@@ -248,7 +248,6 @@ div.dog-bubble>p{
 	
 	text-align:center;
 	padding:0px 35px;	
-	
 }
 
 div.bubble-options{
