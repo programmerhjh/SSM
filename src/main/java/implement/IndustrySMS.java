@@ -15,7 +15,7 @@ public class IndustrySMS
 {
     private static String operation = "/industrySMS/sendSMS";
     private static String accountSid = MessageConfig.ACCOUNT_SID;
-    private static String to = "15819696097";
+    private static String to = "";
     private static String validateNum = ValidateCode.createRandomVcode();
     private static String smsContent = "【百豪HJH】验证码：" + validateNum + "，打死都不要告诉别人哦！ --hjh";
     public static String getTo() {

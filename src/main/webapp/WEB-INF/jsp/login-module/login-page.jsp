@@ -99,8 +99,7 @@
 				success:function (data) {
 				    if (data['OK'] == "OK"){
                         if (data['MessageValidation'] == true){
-                            window.showModalDialog('checkPhone','newWindow',  'menubar:no;dialogHeight=' + h + 'px;dialogWidth=' + w + 'px;dialogLeft=' + iLeft2 + 'px;dialogTop=' + iTop2 + 'px;resizable=yes;scroll=1;resizeable=0;center=yes;location:no;status:no')
-                            window.location.href = "../bbs-module/index";
+                            window.location.href = "checkPhone";
                         }else{
                             window.location.href = "../bbs-module/index";
                         }
