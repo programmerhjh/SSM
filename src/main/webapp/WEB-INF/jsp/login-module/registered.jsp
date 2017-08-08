@@ -216,7 +216,7 @@
                 dataType:'text',
                 success:function (data) {
                     if(data == "true"){
-                        window.location.href = "show-page";
+                        window.location.href = "../bbs-module/index";
                     }else{
                         alert("参数错误");
                         return false;

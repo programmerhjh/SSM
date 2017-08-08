@@ -104,7 +104,7 @@
 
 	$("#submit").click(function addNewPassword() {
         var username = $("#name").val();
-		var password = $("#password").val();
+		var password = $("#newPassword").val();
 		var repassword = $("#reNewPassword").val();
 		if(password != repassword){
 		    alert("密码重复不一致");
