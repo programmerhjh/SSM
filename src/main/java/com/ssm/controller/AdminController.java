@@ -45,7 +45,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/admin-module")
-public class adminController {
+public class AdminController {
 
     private UnDataBasePageTool unDataBasePageTool1 = new UnDataBasePageTool();
     private UnDataBasePageTool unDataBasePageTool2 = new UnDataBasePageTool();

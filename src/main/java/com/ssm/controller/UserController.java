@@ -72,9 +72,9 @@ public class UserController{
     @RequestMapping("/organizing_data")
     public String organizingDataPage(Model model,HttpSession session){
         if(session.getAttribute("user") != null){
-            UserExpand user = (UserExpand) session.getAttribute("user");
-            System.out.println(user);
-            model.addAttribute("user",user);
+            UserExpand userTemp = (UserExpand) session.getAttribute("user");
+            userTemp = userService.checkUserExist(userTemp.getName(), userTemp.getPassword());//更新用户信息
+            model.addAttribute("user",userTemp);
             return "login-module/organizing_data";
         }
         log.info("用户未登录");
@@ -128,6 +128,7 @@ public class UserController{
             UserExpand isExistUser = userService.checkUserExist((String) userFormation.get("name"), encoderByMD5.encrypt( userFormation.get("password").toString()));
             if (isExistUser != null) {
                 userFormation.put("OK","OK");
+                System.out.println(isExistUser.getPhone());
                 if (isExistUser.getPhone() == null) {
                     log.info("短信验证");
                     session.setAttribute("user", isExistUser);
