@@ -181,12 +181,16 @@
         </body>
 </html>
 <script type="text/javascript">
+    //标志点赞 已经操作过了吗
+    var flag = true;
+
     $("span[id^='clickTime']").live('click',function changeClickTimes() {
-        var n = this.innerHTML;
-        var s = $(this).next()[0].innerHTML
-        var c = $(this).parent().parent()[0].id
-        var username = document.getElementById("username"+c+s).value
-        var postname = document.getElementById("postname"+c+s).value
+        var n = this.innerHTML; //获取点赞量
+        var s = $(this).next()[0].innerHTML //获取第一位用户的ID
+        var c = $(this).parent().parent()[0].id //获取第二位用户的ID
+        var username = document.getElementById("username"+c+s).value //根据ID获取当前点击帖子对应的用户
+        var postname = document.getElementById("postname"+c+s).value //根据ID获取当前点击帖子
+
         $.ajax({
             url:'addClickTime',
             data:JSON.stringify({"username":username,"postname":postname}),
@@ -194,7 +198,13 @@
             type:'POST',
             success:function (data) {
                 if(data){
-                    document.getElementById("clickTime"+c+s).innerHTML = (parseInt(n)+1).toString();
+                    if(flag){
+                        document.getElementById("clickTime"+c+s).innerHTML = (parseInt(n)+1).toString();
+                        flag = false;
+                    }else{
+                        document.getElementById("clickTime"+c+s).innerHTML = (parseInt(n)-1).toString();
+                        flag = true;
+                    }
                 }
             }
         })

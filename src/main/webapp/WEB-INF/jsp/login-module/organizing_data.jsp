@@ -10,6 +10,29 @@
 <!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]><html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<script type="text/javascript">
+    Date.prototype.format = function(fmt) {
+        var o = {
+            "M+" : this.getMonth()+1,                 //月份
+            "d+" : this.getDate(),                    //日
+            "h+" : this.getHours(),                   //小时
+            "m+" : this.getMinutes(),                 //分
+            "s+" : this.getSeconds(),                 //秒
+            "q+" : Math.floor((this.getMonth()+3)/3), //季度
+            "S"  : this.getMilliseconds()             //毫秒
+        };
+        if(/(y+)/.test(fmt)) {
+            fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+        }
+        for(var k in o) {
+            if(new RegExp("("+ k +")").test(fmt)){
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+            }
+        }
+        return fmt;
+    };
+</script>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -36,6 +59,7 @@
     <link rel='stylesheet' id='main-css-css'  href='../css/main5152.css?ver=1.0' type='text/css' media='all' />
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="../css/layui.css" media="all" type="text/css">
     <link rel="stylesheet" href="../css/style.css">
 
     <!-- Modernizr JS -->
@@ -78,7 +102,7 @@
                     <h4>生日</h4><input type="text" class="form-control" name="birth" placeholder="xxxx-xx-xx" value="<fmt:formatDate value="${user.birth}" pattern="yyyy-MM-dd"/>" id="Birth" >
                     <h4>Email</h4><input type="email" value="${user.email}" class="form-control" name="email" placeholder="Email" id="Email">
                     <h4>地址</h4><input type="text" class="form-control" value="${user.address}" name="address" placeholder="Address">
-                    <h4>自我描述</h4><textarea class="form-control" name="description" value="${user.description}" placeholder="Description"></textarea><br>
+                    <h4>自我描述</h4><input type="text" class="form-control" name="description" value="${user.description}" placeholder="Description"><br>
                     <button type="submit" id="submit">提交</button>
                 </div>
             </form>
@@ -97,8 +121,11 @@
 <script src="../js/jquery.waypoints.min.js"></script>
 <!-- Main JS -->
 <script src="../js/main.js"></script>
+<!-- Laydate.js -->
+<script src="../js/laydate.js"></script>
 
 <script type="text/javascript">
+    laydate.render({ elem: '#Birth',max: new Date().format("yyyy-MM-dd")});
     var flag1= true,flag2= true,flag3 = true;
 
     var validateNumber;
@@ -241,5 +268,6 @@
             return false;
         }
     })
+
 </script>
 </html>
