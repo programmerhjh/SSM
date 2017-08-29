@@ -40,7 +40,7 @@ public interface PostService {
     //最新帖子
     List<BBSIndexPostsQueryVo> queryLastPost();
 
-    void addClickTime(String username,String postname);
+    void addClickTime(String username,String postname,boolean flag);
 
     //插入一则帖子
     void insertPost(Post post);

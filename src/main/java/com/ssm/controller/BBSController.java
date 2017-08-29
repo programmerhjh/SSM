@@ -146,12 +146,16 @@ public class BBSController {
 
     @RequestMapping("addClickTime")
     public @ResponseBody String addClickTime(@RequestBody String data){
-        System.out.println(data);
         Map<String,Object> map =  JsonToMap.toHashMap(data);
         String username = map.get("username").toString();
         String postname = map.get("postname").toString();
-
-        postService.addClickTime(username,postname);
+        boolean flag;
+        if(map.get("flag").equals("true")){
+            flag = true;
+        }else{
+            flag = false;
+        }
+        postService.addClickTime(username,postname,flag);
         return "OK";
     }
 

@@ -33,7 +33,7 @@ public interface PostMapper extends Mapper<Post> {
 
     PostSpecificVo getPostSpecific(Integer postId);
 
-    void addClickTime(@Param("username") String username,@Param("postname") String postname);
+    void addClickTime(@Param("username") String username,@Param("postname") String postname,@Param("flag") boolean flag);
 
     int countByPostExample(PostExample example);
 

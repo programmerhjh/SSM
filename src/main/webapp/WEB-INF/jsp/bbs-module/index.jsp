@@ -193,7 +193,7 @@
 
         $.ajax({
             url:'addClickTime',
-            data:JSON.stringify({"username":username,"postname":postname}),
+            data:JSON.stringify({"username":username,"postname":postname,"flag":flag}),
             contentType:'application/json;charset=utf-8',
             type:'POST',
             success:function (data) {

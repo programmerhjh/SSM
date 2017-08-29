@@ -353,7 +353,17 @@
     </if>
   </update>
   <update id="addClickTime">
-    update post p,user u set post_clicktimes=post_clicktimes+1 WHERE u.name=#{username} and u.id = p.post_author and p.post_name = #{postname}
+    UPDATE
+        post p,
+        user u
+    SET
+        p.post_clicktimes = (CASE true
+            WHEN (#{flag}) THEN p.post_clicktimes + 1
+            ELSE p.post_clicktimes - 1
+        END)
+    WHERE
+        u.name = #{username} AND u.id = p.post_author
+            AND p.post_name = #{postname}
   </update>
   <update id="updateByPostPrimaryKeySelective" parameterType="com.ssm.model.Post">
     update post

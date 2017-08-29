@@ -94,12 +94,13 @@ public class PostServiceImpl implements PostService {
     public List<BBSIndexPostsQueryVo> queryHotPost() {
         return postMapper.selectHotArticle();
     }
+
     public List<BBSIndexPostsQueryVo> queryLastPost() {
         return postMapper.selectLastArticle();
     }
 
-    public void addClickTime(String username,String postname) {
-        postMapper.addClickTime(username,postname);
+    public void addClickTime(String username,String postname,boolean flag) {
+        postMapper.addClickTime(username,postname,flag);
     }
 
     public void insertPost(Post post) {
