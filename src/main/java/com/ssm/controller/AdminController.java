@@ -259,7 +259,7 @@ public class AdminController {
     public void downloadFile(HttpServletRequest request ,HttpServletResponse response,@RequestBody String data) throws Exception {
         Map map = JsonToMap.toHashMap(data);
         String fileName = map.get("fileName").toString();
-        String ctxPath = "http://39.108.68.200:8088" + GetPropertyUtil.getFileAddress("FilesDownload") + fileName;
+        String ctxPath = GetPropertyUtil.getWebsiteAddress("nginxAddress") + GetPropertyUtil.getFileAddress("FilesDownload") + fileName;
         Writer writer = response.getWriter();
         writer.write(ctxPath);
         writer.flush();
@@ -307,7 +307,7 @@ public class AdminController {
     @RequestMapping("downloadExcelFile")
     public void downloadExcelFile(HttpServletRequest request,HttpServletResponse response) throws Exception {
         String key = ExcelUtil.listToExcel(postService.getAllPost());
-        String ctxPath = "http://39.108.68.200:8088"+GetPropertyUtil.getFileAddress("ExcelDownload") + key;
+        String ctxPath = GetPropertyUtil.getWebsiteAddress("nginxAddress")+GetPropertyUtil.getFileAddress("ExcelDownload") + key;
         Writer writer = response.getWriter();
         writer.write(ctxPath);
         writer.flush();

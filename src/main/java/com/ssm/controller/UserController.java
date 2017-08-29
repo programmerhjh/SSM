@@ -97,7 +97,7 @@ public class UserController{
                 String localPath = GetPropertyUtil.getFileAddress("Pic") + fileName + newFileSuffix;
                 File newFile = new File(localPath);
                 file.transferTo(newFile);
-                resultParam = "http://39.108.68.200:8088/images/" + fileName + newFileSuffix;
+                resultParam = GetPropertyUtil.getWebsiteAddress("nginxPicAddress") + fileName + newFileSuffix;
             }
         }
         response.setContentType("text/html;charset=utf-8");
