@@ -33,8 +33,7 @@ public class PostServiceImpl implements PostService {
 
     @Resource
     private PostMapper postMapper;
-
-
+    
     public void deletePostList(List<Integer> list) {
         postMapper.deletePostList(list);
     }
