@@ -81,6 +81,8 @@ public class UserController{
         return "login-module/login-page";
     }
 
+
+    //包括頭像的上傳和文件上傳
     @RequestMapping("upload")
     public void upload(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String resultParam = "";
@@ -97,7 +99,7 @@ public class UserController{
                 String localPath = GetPropertyUtil.getFileAddress("Pic") + fileName + newFileSuffix;
                 File newFile = new File(localPath);
                 file.transferTo(newFile);
-                resultParam = GetPropertyUtil.getWebsiteAddress("nginxPicAddress") + fileName + newFileSuffix;
+                resultParam = GetPropertyUtil.getWebsiteAddress("localSaveAddress") + GetPropertyUtil.getFileAddress("PicDownload") + fileName + newFileSuffix;
             }
         }
         response.setContentType("text/html;charset=utf-8");

@@ -219,9 +219,9 @@ public class BBSController {
                 File newFile = new File(localPath);
                 file.transferTo(newFile);
                 if(count == 0)
-                    resultParam += "\"" + (GetPropertyUtil.getWebsiteAddress("nginxPicAddress") + fileName + newFileSuffix).replaceAll("\\\\","/")  + "\"";
+                    resultParam += "\"" + (GetPropertyUtil.getWebsiteAddress("localSaveAddress") + GetPropertyUtil.getFileAddress("PicDownload") + fileName + newFileSuffix).replaceAll("\\\\","/")  + "\"";
                 else
-                    resultParam += "," + "\"" + (GetPropertyUtil.getWebsiteAddress("nginxPicAddress") + fileName + newFileSuffix).replaceAll("\\\\","/") + "\"";
+                    resultParam += "," + "\"" + (GetPropertyUtil.getWebsiteAddress("localSaveAddress") + GetPropertyUtil.getFileAddress("PicDownload") + fileName + newFileSuffix).replaceAll("\\\\","/") + "\"";
                 count++;
             }
         }
