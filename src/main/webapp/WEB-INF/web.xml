@@ -103,11 +103,13 @@
     <session-timeout>15</session-timeout>
   </session-config>
 
+  <!-- 错误页面指向 -->
   <error-page>
     <error-code>500</error-code>
     <location>/systemError</location>
   </error-page>
 
+  <!-- 错误页面指向 -->
   <error-page>
     <error-code>404</error-code>
     <location>/noFound</location>

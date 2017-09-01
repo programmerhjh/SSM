@@ -4,6 +4,7 @@ import com.ssm.model.Post;
 import com.ssm.model.Reply;
 
 /**
+ * 帖子回复包装类
  * Created by acer on 2017/7/27.
  */
 public class ReplyPostCustom extends Reply{

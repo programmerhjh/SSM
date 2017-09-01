@@ -4,6 +4,10 @@ import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.Date;
 
+/**
+ * 评论实体类
+ * @time 2017年7月4日9:20:13
+ */
 @Table(name = "comment")
 public class Comment {
     private Integer commentId;

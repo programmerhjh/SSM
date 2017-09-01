@@ -6,6 +6,7 @@ import com.ssm.modelCustom.UserExpand;
 import java.util.List;
 
 /**
+ * 用于前台帖子显示详情的Vo
  * Created by acer on 2017/7/24.
  */
 public class PostSpecificVo extends Post {

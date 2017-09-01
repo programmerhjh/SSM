@@ -5,6 +5,7 @@ import com.ssm.modelCustom.CommentCustom;
 import java.util.List;
 
 /**
+ * 评论Service层
  * Created by acer on 2017/7/22.
  */
 public interface CommentService {

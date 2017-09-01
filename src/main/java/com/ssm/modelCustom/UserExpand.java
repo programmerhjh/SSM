@@ -3,6 +3,7 @@ package com.ssm.modelCustom;
 import com.ssm.model.User;
 
 /**
+ * 包含了用户头像地址的用户包装类
  * Created by acer on 2017/7/24.
  */
 public class UserExpand extends User {

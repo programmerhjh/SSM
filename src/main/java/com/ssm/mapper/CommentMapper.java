@@ -10,6 +10,9 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
+/**
+ * 评论dao层
+ */
 @Repository
 public interface CommentMapper extends Mapper<Comment>{
 
@@ -17,13 +20,30 @@ public interface CommentMapper extends Mapper<Comment>{
 
     void deleteComment(int id);
 
+    /**
+     * 返回一个带Comment包装类的list
+     * @return
+     * @time 2017年8月2日9:03:40
+     */
     List<CommentCustom> selectCommentAndPostAndUser();
 
     List<Comment> selectPostComments(Integer postId);
 
+    /**
+     * 在帖子中添加评论
+     * @param userId
+     * @param postId
+     * @param commentText
+     * @time 2017年8月2日9:04:17
+     */
     void addCommentForPost(@Param("userId") int userId,@Param("postId") int postId,@Param("commentText") String commentText);
 
-
+    /**
+     * 返回用于页面显示的Vo的一个list
+     * @param postId
+     * @return
+     * @time 2017年8月3日9:05:23
+     */
     List<CommentAndReplyVo> selectPostComment(Integer postId);
 
     int countByCommentExample(CommentExample example);

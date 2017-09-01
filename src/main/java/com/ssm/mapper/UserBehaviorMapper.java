@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
+ * 用户行为dao层
  * Created by acer on 2017/7/10.
  */
 

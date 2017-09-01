@@ -7,6 +7,7 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 
 /**
+ * 用户的检验类
  * Created by acer on 2017/7/9.
  */
 public class UserValidator implements Validator{
@@ -22,6 +23,12 @@ public class UserValidator implements Validator{
 
     }
 
+    /**
+     * 检验登录参数是否正确
+     * @param user
+     * @param bindingResult
+     * @return
+     */
     public static boolean loginParam(@Validated(value={ValidatorGroup1.class}) User user, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return false;

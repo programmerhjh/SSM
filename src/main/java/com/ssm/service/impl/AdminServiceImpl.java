@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 /**
+ * 管理员业务层实现
  * Created by acer on 2017/7/31.
  */
 @Service

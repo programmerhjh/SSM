@@ -37,6 +37,7 @@ public class IndustrySMS
      */
     public static void execute()
     {
+        //发送地址
         String url = MessageConfig.BASE_URL + operation;
         String body = "accountSid=" + accountSid + "&to=" + to + "&smsContent=" + smsContent
                 + HttpUtil.createCommonParam();

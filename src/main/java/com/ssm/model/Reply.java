@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
+ * 回复实体类
  * Created by acer on 2017/7/24.
  */
 @Table(name = "reply")

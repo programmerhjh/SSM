@@ -6,6 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * 文件工具
+ * @time 2017年7月30日9:37:14
+ */
 public class FileTool {
     public static ArrayList<String> fileList = new ArrayList<String>();
     public static ArrayList<Long> fileSizeList = new ArrayList<Long>();
@@ -16,6 +20,11 @@ public class FileTool {
      */
 
 
+    /**
+     * 获取目录下的所有文件
+     * @throws IOException
+     * @time 2017年7月30日9:38:05
+     */
     public static void getFiles() throws IOException {
         String encoding = System.getProperty("file.encoding");
         fileList.clear();

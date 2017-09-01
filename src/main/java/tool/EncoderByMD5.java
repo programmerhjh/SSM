@@ -7,6 +7,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
+ * 用于md5加密的工具类
  * Created by acer on 2017/6/27.
  */
 public class EncoderByMD5 {

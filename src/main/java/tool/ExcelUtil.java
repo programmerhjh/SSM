@@ -13,11 +13,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * 用于Excel的工具类
+ * @time 2017年7月16日9:34:02
+ */
 public class ExcelUtil {
 
 	private static String UUIDkey;
 
-
+	/**
+	 * 获取Excel中所有的帖子
+	 * @param file
+	 * @return
+	 * @time 2017年7月16日9:34:50
+	 */
 	public static List<Post> getAllByExcel(String file){
 
 		List<Post> list = new ArrayList<Post>();
@@ -50,6 +59,13 @@ public class ExcelUtil {
 	}
 
 
+	/**
+	 * 把帖子的list写入Excel表中
+	 * @param postList
+	 * @return
+	 * @throws IOException
+	 * @time 2017年7月16日9:35:55
+	 */
 	public static String listToExcel(List<Post> postList) throws IOException {
 
 		try {

@@ -6,6 +6,7 @@ package com.ssm.model;
  */
 public class UserBehavior extends User{
     private int id;
+    //标识用户是否完成了完善个人资料
     private int userHasCompleteFormation;
 
     public void setId(int id) {

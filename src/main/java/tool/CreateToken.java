@@ -3,6 +3,7 @@ package tool;
 import java.util.UUID;
 
 /**
+ * 用于SSO登陆生成登陆令牌
  * Created by acer on 2017/7/10.
  */
 public class CreateToken {

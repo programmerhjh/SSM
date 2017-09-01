@@ -6,10 +6,21 @@ import java.io.*;
 import java.util.UUID;
 
 /**
+ * 文件上传下载工具
  * Created by acer on 2017/7/30.
  */
 public class FileDownUpUtil {
 
+    /**
+     * 下载文件
+     * @param request
+     * @param response
+     * @param storeName
+     * @param realName
+     * @param ctxPath
+     * @throws Exception
+     * @time 2017年7月30日9:36:25
+     */
     public static void downloadFile(HttpServletRequest request,
                                 HttpServletResponse response, String storeName,
                                 String realName,String ctxPath) throws Exception {
@@ -39,6 +50,13 @@ public class FileDownUpUtil {
     }
 
 
+    /**
+     * 删除服务器中的文件
+     * @param fileName
+     * @return
+     * @throws IOException
+     * @time 2017年7月30日9:36:54
+     */
     public static boolean deleteFile(String fileName) throws IOException {
         boolean flag = true;
         File file = new File(GetPropertyUtil.getFileAddress("Files")+fileName);

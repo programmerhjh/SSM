@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 分页
- *
+ * 无向数据库索要数据的分页工具
+ * @time 2017年7月25日9:45:18
  */
 public class UnDataBasePageTool<T> implements Serializable {
 

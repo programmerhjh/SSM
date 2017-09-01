@@ -11,6 +11,7 @@ import org.apache.ibatis.session.RowBounds;
 import java.util.List;
 
 /**
+ * 帖子Service层
  * Created by acer on 2017/7/22.
  */
 public interface PostService {

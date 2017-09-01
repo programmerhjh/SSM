@@ -11,15 +11,28 @@ import tk.mybatis.mapper.common.Mapper;
 import java.util.List;
 
 /**
+ * 回复的dao层
  * Created by acer on 2017/7/24.
  */
 @Repository
 public interface ReplyMapper extends Mapper<Reply> {
 
+    /**
+     * 根据用户id返回一个装有帖子回复一起的包装类的分页list
+     * @param userId
+     * @param rowBounds
+     * @return
+     * @time 2017年8月4日9:15:29
+     */
     List<ReplyPostCustom> getReplyPostList(@Param("userId") int userId, RowBounds rowBounds);
 
     Reply selectByReplyPrimaryKey(int id);
 
+    /**
+     * 获得一个回复包装类的对象
+     * @return
+     * @time 2017年8月5日9:15:17
+     */
     ReplyCustom getReplyInstance();
 
     //插入一条回复

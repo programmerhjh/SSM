@@ -1,6 +1,7 @@
 package tool;
 
 /**
+ * 用于发送短信的一个常量类
  * Created by acer on 2017/7/8.
  */
 public class MessageConfig {

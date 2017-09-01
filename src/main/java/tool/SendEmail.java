@@ -1,8 +1,4 @@
 package tool;
-
-/**
- * Created by acer on 2017/8/1.
- */
 import java.util.Date;
 import java.util.Properties;
 
@@ -15,10 +11,9 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-
 /**
- *
- * @author Qixuan.Chen
+ * 发送邮件功能类
+ * Created by acer on 2017/8/1.
  */
 public class SendEmail {
 
@@ -54,6 +49,12 @@ public class SendEmail {
         return session;
     }
 
+    /**
+     * 发送方法
+     * @param toEmail
+     * @param content
+     * @time 2017年8月1日9:43:20
+     */
     public static void send(String toEmail , String content) {
         Session session = getSession();
         try {
@@ -78,6 +79,7 @@ public class SendEmail {
         }
     }
 
+    //测试发送邮件
     public static void main(String[] args){
         SendEmail.send("605594106@qq.com","你好");
     }

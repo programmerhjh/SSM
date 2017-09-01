@@ -7,6 +7,7 @@ import com.ssm.modelCustom.UserExpand;
 import java.util.List;
 
 /**
+ * 用于前台回复和评论显示的Vo
  * Created by acer on 2017/7/24.
  */
 public class CommentAndReplyVo extends Comment {

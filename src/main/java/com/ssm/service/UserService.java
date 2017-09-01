@@ -6,6 +6,7 @@ import com.ssm.modelCustom.UserExpand;
 import java.util.List;
 
 /**
+ * 用户Service层
  * Created by acer on 2017/6/24.
  */
 public interface UserService {

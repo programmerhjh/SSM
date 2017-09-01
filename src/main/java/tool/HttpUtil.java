@@ -11,6 +11,7 @@ import java.util.Date;
 
 import org.apache.commons.codec.digest.DigestUtils;
 /**
+ * 客户端调用工具
  * Created by acer on 2017/7/8.
  */
 public class HttpUtil {
@@ -49,8 +50,8 @@ public class HttpUtil {
         String result = "";
         try
         {
-            OutputStreamWriter out = null;
-            BufferedReader in = null;
+            OutputStreamWriter out;
+            BufferedReader in;
             URL realUrl = new URL(url);
             URLConnection conn = realUrl.openConnection();
 

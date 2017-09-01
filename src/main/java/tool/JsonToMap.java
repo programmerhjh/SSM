@@ -7,9 +7,17 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * json串中数据转化为Map集合
  * Created by acer on 2017/6/27.
  */
 public class JsonToMap {
+
+    /**
+     * 转化为一个HashMap集合
+     * @param str
+     * @return
+     * @time 2017年7月1日9:40:42
+     */
     public static Map<String, Object> toHashMap(String str)
     {
         Map<String, Object> data = new HashMap<String, Object>();

@@ -10,12 +10,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
+ * 把文件转化为zip压缩包类型工具类
  * Created by acer on 2017/7/30.
  */
 public class TurnZip {
 
-
-     static String zipName(String name) {
+    /**
+     * 生成压缩包文件名
+     * @param name
+     * @return
+     * @time 2017年7月30日9:44:23
+     */
+    static String zipName(String name) {
         String prefix = "";
         if (name.indexOf(".") != -1) {
             prefix = name.substring(0, name.lastIndexOf("."));

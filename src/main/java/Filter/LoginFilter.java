@@ -16,6 +16,14 @@ public class LoginFilter implements Filter {
     public void destroy() {
     }
 
+    /**
+     * isLogin为正确就通过，反之则拦截
+     * @param req
+     * @param resp
+     * @param chain
+     * @throws ServletException
+     * @throws IOException
+     */
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
         HttpServletResponse response = (HttpServletResponse) resp;
         HttpServletRequest request = (HttpServletRequest) req;

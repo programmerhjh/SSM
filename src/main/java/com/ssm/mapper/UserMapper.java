@@ -9,6 +9,7 @@ import tk.mybatis.mapper.common.Mapper;
 import java.util.List;
 
 /**
+ * 用户dao层
  * Created by acer on 2017/6/24.
  */
 @Repository
@@ -20,6 +21,7 @@ public interface UserMapper extends Mapper<User>{
     //删除用户
     void deleteUser(int id);
 
+    //检查用户是否存在
     UserExpand checkUserExist(@Param("name")String name,@Param("password")String password);
     //注册用户
     void registeredUser(@Param("name")String username,@Param("password")String password);
@@ -28,8 +30,10 @@ public interface UserMapper extends Mapper<User>{
     //更新用户在行为表中的信息
     void updateUserBehavior(@Param("user") User user);
 
+    //通过用户名返回一个User对象
     User findUserByName(@Param("name") String name);
 
+    //检测用户名是否重复
     int checkUsernameIsExist(String username);
     //添加用户已完成完善个人资料的记录
     void updateUserHasCompleteFormation(@Param("user") UserExpand user);

@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ * 帖子业务层实现
  * Created by acer on 2017/7/22.
  */
 @Transactional

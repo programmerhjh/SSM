@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
+ * 用户实体类
  * Created by acer on 2017/6/24.
  */
 @Table(name = "user")

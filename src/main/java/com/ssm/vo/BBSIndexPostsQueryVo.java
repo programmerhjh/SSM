@@ -4,7 +4,7 @@ import com.ssm.model.Post;
 import com.ssm.model.User;
 
 /**
- * 用于论坛主页文章的显示
+ * 用于论坛主页文章显示的Vo
  * Created by acer on 2017/7/11.
  */
 public class BBSIndexPostsQueryVo extends Post{

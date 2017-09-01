@@ -7,9 +7,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 用户登陆拦截器
  * Created by acer on 2017/8/1.
  */
 public class LoginInterceptor implements HandlerInterceptor {
+
+    /**
+     * session中无user对象则返回false，反之则翻译true
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @param o
+     * @return
+     * @throws Exception
+     */
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         Object user = httpServletRequest.getSession().getAttribute("user");
         if (user != null){

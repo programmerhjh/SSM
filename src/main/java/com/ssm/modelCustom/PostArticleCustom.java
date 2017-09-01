@@ -6,6 +6,7 @@ import com.ssm.model.Post;
 import java.util.List;
 
 /**
+ * 帖子包装类
  * Created by acer on 2017/7/26.
  */
 public class PostArticleCustom extends Post{

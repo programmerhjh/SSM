@@ -5,6 +5,7 @@ import com.ssm.model.Post;
 import com.ssm.model.User;
 
 /**
+ * 评论包装类
  * Created by acer on 2017/7/19.
  */
 public class CommentCustom extends Comment {

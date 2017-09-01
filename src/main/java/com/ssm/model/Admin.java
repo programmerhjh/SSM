@@ -1,5 +1,9 @@
 package com.ssm.model;
 
+/**
+ * 管理员实体类
+ * @time 2017年7月11日9:19:06
+ */
 public class Admin {
     private Integer adminId;
 

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
+ * 获取配置文件信息工具
  * Created by acer on 2017/7/31.
  */
 public class GetPropertyUtil {

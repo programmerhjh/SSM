@@ -532,6 +532,7 @@
 
 <script type="text/javascript">
 
+    <%-- 批量删除用户按钮 --%>
     $("#deleteAllUser").live('click',function () {
         var temp = new Array();
         var tempHtmlId = new Array();
@@ -562,6 +563,7 @@
         })
     })
 
+    <%-- 批量删除帖子按钮 --%>
     $("#deleteAllPost").live('click',function () {
         var temp = new Array();
         var tempHtmlId = new Array();
@@ -592,6 +594,7 @@
         })
     })
 
+    <%-- 批量删除评论按钮 --%>
     $("#deleteAllComment").live('click',function () {
         var temp = new Array();
         var tempHtmlId = new Array();
