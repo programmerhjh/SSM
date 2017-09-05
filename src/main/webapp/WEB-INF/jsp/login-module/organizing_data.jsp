@@ -91,8 +91,8 @@
                     <h4>用户名</h4><input type="text" name="name" value="${user.name}" id="name" disabled="true">
                     <c:choose>
                         <c:when test="${user.phone == null}" >
-                            <h4>手机号码</h4><input type="text" class="form-control" name="phone" id="phone" placeholder="Phone" autocomplete="off"><br><button type="button" id="send">发送手机验证码</button><br>
-                            <h4>验证码</h4><input type="text" class="form-control" name="validateNumber" id="ValidateNumber" placeholder="ValidateNumber" autocomplete="off">
+                            <h4>手机号码</h4><input type="text" class="form-control" name="phone" value="还未进行短信验证" id="phone1" placeholder="Phone" autocomplete="off" disabled="true"><br>
+                            <a href="checkPhone">请进行短信验证再重新修改个人资料</a>
                         </c:when>
                         <c:otherwise>
                             <h4>手机号码</h4><input type="text" class="form-control" name="phone" value="${user.phone}" id="phone1" placeholder="Phone" autocomplete="off" disabled="true"><br>
